@@ -1,3 +1,9 @@
+---
+title: "real time internet speed extension"
+date: 2024-08-01T16:09:18.506Z
+slug: real-time-internet-speed-extension
+---
+
 # Building Real-Time Internet Speed: A Simple Tool for Instant Connection Monitoring
 
 Sometimes you just want to know how fast your internet is *right now*. Not a speed test, not a graph, just a simple, real-time number. That's exactly why I made **Real-Time Internet Speed**.

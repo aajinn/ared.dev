@@ -1,3 +1,9 @@
+---
+title: "how to build projects with ai simple way"
+date: 2024-10-25T05:48:06.939Z
+slug: how-to-build-projects-with-ai-simple-way
+---
+
 # how to build projects with ai (simple way)
 
 so you wanna build a project using ai.

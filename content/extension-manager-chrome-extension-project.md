@@ -1,3 +1,9 @@
+---
+title: "extension manager chrome extension project"
+date: 2025-01-26T06:01:45.920Z
+slug: extension-manager-chrome-extension-project
+---
+
 # Building Extension Manager: A Simple Tool That Made My Browser Life Better
 
 So I wanted to build something small but useful — something I'd personally use. I realized my Chrome toolbar was a mess. Dozens of extensions, most of which I use only occasionally. Clicking through the extensions page every time just to disable or enable them? Not it.

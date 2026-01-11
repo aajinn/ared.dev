@@ -1,3 +1,9 @@
+---
+title: "dev log how i tracked user activity free tools"
+date: 2023-06-17T00:36:23.474Z
+slug: dev-log-how-i-tracked-user-activity-free-tools
+---
+
 # Dev Log: How I Tracked Website User Activity Using Free Tools
 
 ---

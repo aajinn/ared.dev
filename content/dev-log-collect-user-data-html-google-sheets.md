@@ -1,3 +1,9 @@
+---
+title: "dev log collect user data html google sheets"
+date: 2023-08-06T04:52:13.544Z
+slug: dev-log-collect-user-data-html-google-sheets
+---
+
 # Dev Log: Can I Collect User Data Using Just HTML and Google Sheets?
 
 ---

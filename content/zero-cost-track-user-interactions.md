@@ -1,3 +1,9 @@
+---
+title: "zero cost track user interactions"
+date: 2023-01-24T19:57:05.100Z
+slug: zero-cost-track-user-interactions
+---
+
 # Zero-Cost Ways to Track User Interactions on Your Website
 
 ---

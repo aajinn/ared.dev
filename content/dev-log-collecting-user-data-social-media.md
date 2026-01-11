@@ -1,3 +1,9 @@
+---
+title: "dev log collecting user data social media"
+date: 2023-01-04T21:52:30.791Z
+slug: dev-log-collecting-user-data-social-media
+---
+
 # Dev Log: Collecting User Data from Social Media for Free
 
 ---

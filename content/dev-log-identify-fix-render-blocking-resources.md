@@ -1,3 +1,9 @@
+---
+title: "dev log identify fix render blocking resources"
+date: 2025-09-28T20:52:00.967Z
+slug: dev-log-identify-fix-render-blocking-resources
+---
+
 # Dev Log: How to Identify and Fix Render-Blocking Resources
 
 ---
