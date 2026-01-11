@@ -49,7 +49,7 @@ function parseMarkdownWithFrontmatter(content: string): { metadata: PostMetadata
   // Parse frontmatter (simple key-value pairs)
   const metadata: PostMetadata = {
     title: '',
-    date: new Date().toISOString(),
+    date: '',
     slug: ''
   };
 
