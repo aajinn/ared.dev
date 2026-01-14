@@ -4,7 +4,7 @@ date: 2024-12-04T00:00:00.000Z
 slug: real-time-internet-speed-monitor
 tech: "Chrome Extension (Manifest V3), JavaScript"
 liveUrl: "https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl"
-github: ""
+github: "https://github.com/aajinn/real-time-internet-speed"
 ---
 
 ## Real-Time Internet Speed Monitoring Chrome Extension
