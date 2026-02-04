@@ -2,7 +2,7 @@
 title: "Leaf Disease Detection System"
 date: 2025-01-10T00:00:00.000Z
 slug: leaf-disease-detection-system
-tech: "Python, FastAPI, Streamlit, Groq Llama Vision"
+tech: "Python, FastAPI, Streamlit, Groq Llama Vision, Razorpay"
 liveUrl: ""
 github: "https://github.com/aajinn/leaf-diseases-detect"
 ---
@@ -27,6 +27,8 @@ A full-stack AI system that analyzes plant leaf images to detect diseases, asses
 - **AI Engine**: Meta Llama Vision models via Groq API  
 - **Deployment**: Ready for cloud (e.g., Vercel) or local setup  
 - **Testing**: Automated test suite for API and model logic
+- **Payment Gateway**: Razorpay for seamless INR transactions and UPI support
+
 
 ### Development Process
 

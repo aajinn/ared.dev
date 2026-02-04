@@ -42,7 +42,7 @@ export default function Home() {
 
           <div>
             <p className="font-semibold mb-2 text-gray-700">Also Proficient In</p>
-            <p className="text-sm text-gray-600">MongoDB, Express.js, Tailwind CSS, Docker, AWS, CI/CD, Jest, OAuth/JWT</p>
+            <p className="text-sm text-gray-600">MongoDB, Express.js, Tailwind CSS, Docker, AWS, CI/CD, Jest, OAuth/JWT, Razorpay</p>
           </div>
         </div>
       </section>
