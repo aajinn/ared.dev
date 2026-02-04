@@ -123,7 +123,11 @@ export default function Home() {
           </div>
 
           <div>
+<<<<<<< HEAD
             <p className="font-semibold mb-2 text-gray-700">Also Working With</p>
+=======
+            <p className="font-semibold mb-2 text-gray-700">Also Proficient In</p>
+>>>>>>> b4777b6 (Add Razorpay to tech stack in home and projects page)
             <p className="text-sm text-gray-600">MongoDB, Express.js, Tailwind CSS, Docker, AWS, CI/CD, Jest, OAuth/JWT, Razorpay</p>
           </div>
         </div>
