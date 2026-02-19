@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import Description from '@/src/components/Description';
+import Description from '@/components/Description';
 import Link from 'next/link';
 
 interface BlogPostPageProps {
