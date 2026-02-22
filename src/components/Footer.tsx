@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-8">
@@ -10,7 +12,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
             >
-              <img src="https://img.shields.io/badge/GitHub-0F172A?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+              <Image src="https://img.shields.io/badge/GitHub-0F172A?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" width={120} height={28} />
             </a>
             <a 
               href="https://x.com/areddev" 
@@ -18,7 +20,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
             >
-              <img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" />
+              <Image src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" width={120} height={28} />
             </a>
           </div>
           <p className="text-gray-400 text-sm">
