@@ -19,8 +19,8 @@ const SESSION_CONFIG = {
 /**
  * Creates a secure admin session
  */
-export function createSession(): void {
-  const cookieStore = cookies();
+export async function createSession(): Promise<void> {
+  const cookieStore = await cookies();
   
   cookieStore.set(SESSION_CONFIG.cookieName, 'true', {
     httpOnly: SESSION_CONFIG.httpOnly,
@@ -34,16 +34,16 @@ export function createSession(): void {
 /**
  * Destroys the admin session
  */
-export function destroySession(): void {
-  const cookieStore = cookies();
+export async function destroySession(): Promise<void> {
+  const cookieStore = await cookies();
   cookieStore.delete(SESSION_CONFIG.cookieName);
 }
 
 /**
  * Validates if the current session is authenticated
  */
-export function isAuthenticated(): boolean {
-  const cookieStore = cookies();
+export async function isAuthenticated(): Promise<boolean> {
+  const cookieStore = await cookies();
   const sessionCookie = cookieStore.get(SESSION_CONFIG.cookieName);
   return sessionCookie?.value === 'true';
 }

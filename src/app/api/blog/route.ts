@@ -17,8 +17,9 @@ async function ensureContentDir() {
 }
 
 // Helper function to check authentication
-function checkAuth(cookies: any) {
-  const isAuthenticated = cookies().get('isAuthenticated')?.value === 'true';
+async function checkAuth() {
+  const cookieStore = await cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
   if (!isAuthenticated) {
     return { error: 'Not authenticated', status: 401 };
   }
@@ -27,7 +28,7 @@ function checkAuth(cookies: any) {
 
 export async function POST(request: Request) {
   // Check authentication
-  const authError = checkAuth(cookies);
+  const authError = await checkAuth();
   if (authError) {
     return NextResponse.json(
       { error: authError.error },
@@ -87,7 +88,7 @@ ${content}`;
 export async function PUT(request: Request) {
   try {
     // Check authentication
-    const authError = checkAuth(cookies);
+    const authError = await checkAuth();
     if (authError) {
       return NextResponse.json(
         { error: authError.error },
@@ -147,7 +148,7 @@ ${content}`;
 export async function DELETE(request: Request) {
   try {
     // Check authentication
-    const authError = checkAuth(cookies);
+    const authError = await checkAuth();
     if (authError) {
       return NextResponse.json(
         { error: authError.error },

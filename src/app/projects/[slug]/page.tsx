@@ -97,7 +97,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
   
   const { metadata, content } = parseMarkdownWithFrontmatter(markdownContent);
-  const title = metadata.title || params.slug.replace(/-/g, ' ');
+  const title = metadata.title || slug.replace(/-/g, ' ');
   
   return (
     <main className="flex justify-center px-2 sm:px-4">
