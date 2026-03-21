@@ -12,7 +12,13 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
             >
-              <Image src="https://img.shields.io/badge/GitHub-0F172A?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" width={120} height={28} />
+              <Image
+                src="https://img.shields.io/badge/GitHub-0F172A?style=for-the-badge&logo=github&logoColor=white"
+                alt="GitHub"
+                width={120}
+                height={28}
+                unoptimized
+              />
             </a>
             <a 
               href="https://x.com/areddev" 
@@ -20,7 +26,14 @@ export default function Footer() {
               rel="noopener noreferrer"
               className="hover:text-gray-300 transition-colors"
             >
-              <Image src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" width={120} height={28} />
+              <Image
+                src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white"
+                alt="X"
+                width={80}
+                height={28}
+                unoptimized
+                className='rounded-md'
+              />
             </a>
           </div>
           <p className="text-gray-400 text-sm">

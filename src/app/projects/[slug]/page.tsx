@@ -4,7 +4,7 @@ import Description from '@/components/Description';
 import Link from 'next/link';
 
 interface ProjectPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 const PROJECTS_DIR = path.join(process.cwd(), 'projects');
@@ -80,8 +80,9 @@ function parseMarkdownWithFrontmatter(content: string): { metadata: ProjectMetad
   return { metadata, content: body };
 }
 
-export default function ProjectPage({ params }: ProjectPageProps) {
-  const markdownContent = getProjectContent(params.slug);
+export default async function ProjectPage({ params }: ProjectPageProps) {
+  const { slug } = await params;
+  const markdownContent = getProjectContent(slug);
   
   if (!markdownContent) {
     return (
