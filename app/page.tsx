@@ -1,11 +1,17 @@
 export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
-      <img
-        src="/giphy.gif"
-        alt="Animated hero background"
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        aria-hidden="true"
         className="absolute inset-0 h-full w-full object-cover object-center brightness-75"
-      />
+      >
+        <source src="/hero.webm" type="video/webm" />
+        <source src="/hero.mp4" type="video/mp4" />
+      </video>
       <div className="relative z-10 flex min-h-screen items-center justify-center px-6">
         <div className="w-full max-w-3xl text-center">
           <h1 className="animate-slide-left hero-name text-[clamp(2.8rem,7vw,5rem)] uppercase tracking-[0.12em] leading-[0.95]">
