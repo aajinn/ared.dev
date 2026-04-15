@@ -1,1 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap');
 @import "tailwindcss";
+
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-left {
+  animation: slide-left 0.8s ease-out both;
+}
+
+.hero-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.08em;
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+}
+
+.hero-name-line {
+  display: block;
+}
