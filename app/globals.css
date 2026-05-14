@@ -1,5 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme inline {
+  /* Override Next.js default Geist font — use our self-hosted Inter */
+  --font-sans: var(--font-inter);
+  --font-geist-sans: var(--font-inter);
+  --font-geist-mono: var(--font-inter);
+}
 
 @keyframes slide-left {
   0% {
@@ -17,9 +23,9 @@
 }
 
 .hero-name {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter), sans-serif;
   font-weight: 800;
-  color: #ffffff;
+  color: #f0f0ff;
   letter-spacing: 0.08em;
   text-shadow: none;
   -webkit-text-stroke: 0;
@@ -27,4 +33,15 @@
 
 .hero-name-line {
   display: block;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
 }
