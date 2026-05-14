@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import { cacheLife } from "next/cache";
 import { ReviewGrid } from "./components/ReviewGrid";
-import { ReviewStack } from "./components/ReviewStack";
 
 const skills = [
   { category: "Languages", items: ["JavaScript", "Python", "HTML", "CSS"] },
@@ -111,9 +110,14 @@ export default async function Home() {
 
         {/* Right: reviews — desktop only */}
         {reviewImages.length > 0 && (
-          <div className="hidden lg:flex lg:flex-col lg:w-80 xl:w-96 lg:shrink-0">
-            <p className="mb-3 text-[10px] uppercase tracking-[0.25em] text-[#555570]">Reviews</p>
-            <ReviewStack images={reviewImages} eager />
+          <div className="hidden lg:flex lg:flex-col lg:w-80 xl:w-96 lg:shrink-0 lg:gap-3">
+            <p className="mb-1 text-[10px] uppercase tracking-[0.25em] text-[#555570]">Reviews</p>
+            <ReviewGrid
+              images={reviewImages}
+              sizes="(max-width: 1280px) 320px, 384px"
+              eager
+              columns={1}
+            />
           </div>
         )}
       </section>

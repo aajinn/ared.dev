@@ -47,8 +47,8 @@ export function ReviewGrid({ images, sizes, eager = false, columns = 1 }: Props)
               alt={`Review ${i + 1}`}
               width={600}
               height={400}
-              loading={eager && i === 0 ? "eager" : "lazy"}
-              preload={eager && i === 0}
+              loading={i === 0 ? "eager" : "lazy"}
+              preload={i === 0}
               quality={80}
               sizes={sizes}
               className="h-auto w-full rounded-lg object-contain"

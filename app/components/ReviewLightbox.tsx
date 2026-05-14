@@ -71,6 +71,7 @@ export function ReviewLightbox({ images, initialIndex = 0, onClose }: Props) {
           alt={`Review ${index + 1}`}
           width={1200}
           height={800}
+          loading="eager"
           quality={90}
           className="max-h-[90vh] w-auto rounded-lg object-contain shadow-2xl"
           sizes="90vw"
