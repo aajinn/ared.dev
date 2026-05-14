@@ -54,9 +54,10 @@ export function ReviewGrid({ images, sizes, eager = false, columns = 1 }: Props)
               className="h-auto w-full rounded-lg object-contain"
             />
 
+            {/* Hover preview — desktop only, hidden on mobile to prevent overflow */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 z-50 w-[700px] max-w-[90vw] overflow-hidden rounded-xl border border-[#3a3a5a] bg-[#0a0a0f] shadow-[0_24px_80px_rgba(0,0,0,0.9)]"
+              className="pointer-events-none absolute left-1/2 z-50 hidden w-[700px] overflow-hidden rounded-xl border border-[#3a3a5a] bg-[#0a0a0f] shadow-[0_24px_80px_rgba(0,0,0,0.9)] md:block"
               style={{
                 ...(showBelow
                   ? { top: "calc(100% + 12px)" }

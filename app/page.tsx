@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { cacheLife } from "next/cache";
 import { ReviewGrid } from "./components/ReviewGrid";
+import { ReviewScroll } from "./components/ReviewScroll";
 
 const skills = [
   { category: "Languages", items: ["JavaScript", "Python", "HTML", "CSS"] },
@@ -41,21 +42,24 @@ export default async function Home() {
     .map((f) => `/${f}`);
 
   return (
-    <main className="relative bg-[#0a0a0f] text-[#e8e8f0]">
+    <main className="relative bg-[#0a0a0f] text-[#e8e8f0] overflow-x-hidden">
       {/* Hero + Reviews side-by-side on desktop */}
       <section className="flex min-h-[100svh] flex-col items-center justify-center px-5 text-center lg:flex-row lg:items-center lg:justify-center lg:gap-16 lg:px-16 lg:text-left xl:px-24">
 
         {/* Left: hero text */}
-        <div className="flex flex-col items-center lg:items-start lg:flex-1">
+        <div className="flex flex-col items-center text-center lg:items-start lg:flex-1 lg:text-left">
           <p className="mb-4 text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">
-            Full Stack Developer
+            Full Stack Product Builder
           </p>
           <h1 className="animate-slide-left hero-name text-[clamp(2.4rem,10vw,5.5rem)] uppercase tracking-[0.08em] leading-[0.95] text-[#f0f0ff]">
             <span className="hero-name-line">Ajin</span>
             <span className="hero-name-line">Varghese</span>
             <span className="hero-name-line">Chandy</span>
           </h1>
-          <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start">
+          <p className="mt-5 max-w-sm px-2 text-sm text-[#7070a0] leading-relaxed lg:px-0">
+            Building scalable web products focused on automation, real-time systems, and AI integrations.
+          </p>
+          <div className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
             {[
               "REST APIs", "Auth & JWT", "Rate Limiting", "Payment Integration",
               "Real-time Systems", "Database Design", "CI/CD", "Chrome Extensions",
@@ -63,7 +67,7 @@ export default async function Home() {
             ].map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-[#2a2a3a] px-3 py-1 text-xs text-[#7070a0]"
+                className="rounded-full border border-[#2a2a3a] px-3 py-1 text-xs text-[#7070a0] whitespace-nowrap"
               >
                 {tag}
               </span>
@@ -77,11 +81,14 @@ export default async function Home() {
             rel="noreferrer"
             className="mt-8 flex w-full max-w-xs items-center justify-center gap-3 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-95 sm:w-auto lg:justify-start"
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
               <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" stroke="currentColor" strokeWidth="1.5"/>
               <path d="M2 6l10 7 10-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
             </svg>
-            Hire Me · careerajin@gmail.com
+            <span className="flex flex-col items-start leading-tight">
+              <span>Hire Me</span>
+              <span className="text-xs font-normal opacity-70">careerajin@gmail.com</span>
+            </span>
           </a>
 
           {/* Social links */}
@@ -108,23 +115,17 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Right: reviews — desktop only */}
+        {/* Right: reviews — desktop scroll reveal */}
         {reviewImages.length > 0 && (
-          <div className="hidden lg:flex lg:flex-col lg:w-80 xl:w-96 lg:shrink-0 lg:gap-3">
-            <p className="mb-1 text-[10px] uppercase tracking-[0.25em] text-[#555570]">Reviews</p>
-            <ReviewGrid
-              images={reviewImages}
-              sizes="(max-width: 1280px) 320px, 384px"
-              eager
-              columns={1}
-            />
+          <div className="hidden lg:block lg:w-80 xl:w-96 lg:shrink-0">
+            <ReviewScroll images={reviewImages} />
           </div>
         )}
       </section>
 
       {/* Reviews — mobile only */}
       {reviewImages.length > 0 && (
-        <section className="px-5 py-16 bg-[#0e0e16] lg:hidden sm:px-6 sm:py-24">
+        <section className="px-5 py-16 bg-[#0e0e16] lg:hidden sm:px-6 sm:py-24 overflow-hidden">
           <div className="mx-auto w-full max-w-3xl">
             <div className="mb-8 flex items-center gap-4 sm:mb-10">
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">02</span>
@@ -153,7 +154,7 @@ export default async function Home() {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               {skills.map(({ category, items }) => (
-                <div key={category} className="rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-5">
+                <div key={category} className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-5">
                   <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[#555570] sm:text-xs">{category}</p>
                   <div className="flex flex-wrap gap-2">
                     {items.map((item) => (
@@ -177,7 +178,7 @@ export default async function Home() {
             </div>
             <div className="flex flex-col gap-4 sm:gap-6">
               {projects.map((project) => (
-                <div key={project.title} className="rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
+                <div key={project.title} className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
                   <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
                     <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{project.title}</h3>
                     <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
@@ -202,7 +203,7 @@ export default async function Home() {
       {/* Footer */}
       <footer className="px-5 py-8 text-center bg-[#0e0e16] sm:py-10">
         <p className="text-[10px] text-[#555570] tracking-widest uppercase sm:text-xs">
-          Ajin Varghese Chandy · Full Stack Developer
+          Ajin Varghese Chandy · Full Stack Product Builder
         </p>
       </footer>
     </main>
