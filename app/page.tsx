@@ -5,30 +5,33 @@ import { ReviewGrid } from "./components/ReviewGrid";
 import { ReviewScroll } from "./components/ReviewScroll";
 
 const skills = [
-  { category: "Languages", items: ["JavaScript", "Python", "HTML", "CSS"] },
+  { category: "Languages", items: ["JavaScript", "TypeScript", "C#"] },
+  { category: "Backend", items: ["ASP.NET Core", "ASP.NET MVC", "REST APIs", "EF Core"] },
   { category: "Frontend", items: ["React.js", "Next.js", "Tailwind CSS"] },
-  { category: "Backend", items: ["Node.js", "Express.js"] },
-  { category: "Databases", items: ["MongoDB", "PostgreSQL"] },
+  { category: "Database", items: ["SQL Server", "MongoDB"] },
+  { category: "Tools & Concepts", items: ["Git", "GitHub", "OOP", "MVC Architecture"] },
 ];
 
-const projects = [
-  {
-    title: "Real-Time Internet Speed Monitor",
-    tag: "Chrome Extension",
-    bullets: [
-      "Built and published a Chrome extension for real-time internet speed tracking",
-      "Achieved 1,000+ active users on Chrome Web Store",
-    ],
-  },
-  {
-    title: "Leaf Diseases Detection",
-    tag: "ML + Payments",
-    bullets: [
-      "Integrated Razorpay payment gateway for paid usage access",
-      "Developed end-to-end pipeline: image upload → processing → prediction → paid results",
-    ],
-  },
-];
+const experience = {
+  role: "Independent Software Developer",
+  period: "2024 – Present",
+  description: "Projects shipped independently, demonstrating full ownership and public deployment.",
+  items: [
+    { label: "Real-Time Internet Speed Monitor", url: "https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl", github: "https://github.com/aajinn/real-time-internet-speed", detail: "Chrome Extension — Engineered and published a performant tool now at 1,000+ active installs. Used Manifest V3 Service Workers to achieve <5% CPU usage and a sub‑1MB package, resulting in a 4.1★ store rating." },
+    { label: "MongooseNet NuGet Package", url: "https://www.nuget.org/packages/MongooseNet/", github: "https://github.com/aajinn/MongooseNet", detail: "Authored and published a reusable C# library for schema‑flexible data handling in MongoDB. Delivered full XML docs and semantic versioning for drop‑in integration across modern .NET projects." },
+  ],
+};
+
+const project = {
+  title: "TaskFlow – Full-Stack Project Management App",
+  period: "2026",
+  items: [
+    { label: "Scalable Architecture", detail: "Next.js (React) frontend and ASP.NET Core Web API backend, using modular service-based backend architecture." },
+    { label: "Real-Time Collaboration", detail: "SignalR and ASP.NET Core WebSockets eliminating manual page refreshes for collaborative teams." },
+    { label: "Auth & Access Control", detail: "JWT authentication and role‑based access (Admin/Member) to secure multi‑user workspaces." },
+    { label: "Polished UI/UX", detail: "Mobile‑first, responsive design with Tailwind CSS, skeleton loaders, and optimistic UI updates." },
+  ],
+};
 
 export default async function Home() {
   "use cache";
@@ -173,28 +176,55 @@ export default async function Home() {
           <div className="mx-auto w-full max-w-3xl">
             <div className="mb-8 flex items-center gap-4 sm:mb-10">
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">04</span>
-              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Projects</h2>
+              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Technical Experience</h2>
               <div className="h-px flex-1 bg-[#1e1e2e]" />
             </div>
             <div className="flex flex-col gap-4 sm:gap-6">
-              {projects.map((project) => (
-                <div key={project.title} className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
-                  <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
-                    <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{project.title}</h3>
-                    <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
-                      {project.tag}
-                    </span>
-                  </div>
-                  <ul className="flex flex-col gap-2">
-                    {project.bullets.map((b) => (
-                      <li key={b} className="flex gap-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">
-                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3a3a5a]" />
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
+              <div className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
+                <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
+                  <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{experience.role}</h3>
+                  <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
+                    {experience.period}
+                  </span>
                 </div>
-              ))}
+                <p className="mb-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">{experience.description}</p>
+                <ul className="flex flex-col gap-2">
+                  {experience.items.map((item) => (
+                    <li key={item.label} className="flex gap-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3a3a5a]" />
+                      <span>{item.url ? (<a href={item.url} target="_blank" rel="noreferrer"><strong className="text-[#c0c0e0] underline underline-offset-2 hover:text-white">{item.label}</strong></a>) : (<strong className="text-[#c0c0e0]">{item.label}</strong>)} {item.github && <a href={item.github} target="_blank" rel="noreferrer" className="text-[#555570] hover:text-[#a0a0c0] transition-colors" title="GitHub">&#8599;</a>} — {item.detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="px-5 pb-16 sm:px-6 sm:pb-24">
+          <div className="mx-auto w-full max-w-3xl">
+            <div className="mb-8 flex items-center gap-4 sm:mb-10">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">05</span>
+              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Project</h2>
+              <div className="h-px flex-1 bg-[#1e1e2e]" />
+            </div>
+            <div className="flex flex-col gap-4 sm:gap-6">
+              <div className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
+                <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
+                  <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{project.title}</h3>
+                  <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
+                    {project.period}
+                  </span>
+                </div>
+                <ul className="flex flex-col gap-2">
+                  {project.items.map((item) => (
+                    <li key={item.label} className="flex gap-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3a3a5a]" />
+                      <span><strong className="text-[#c0c0e0]">{item.label}</strong> — {item.detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
