@@ -10,6 +10,7 @@ import type {
   Social,
   Email,
   Footer,
+  Review,
 } from "@/lib/content";
 import { getDefaultContent } from "@/lib/content";
 
@@ -226,15 +227,15 @@ export default function AdminPage() {
             saving={saving === "experience"}
           />
 
-          <ProjectEditor
-            project={content.project}
+          <ProjectsEditor
+            projects={content.projects}
             onUpdate={(data) => {
-              setContent((prev) => prev ? { ...prev, project: data } : prev);
-              markDirty("project");
+              setContent((prev) => prev ? { ...prev, projects: data } : prev);
+              markDirty("projects");
             }}
-            dirty={dirtySections.has("project")}
-            onSave={() => saveSection("project", content.project)}
-            saving={saving === "project"}
+            dirty={dirtySections.has("projects")}
+            onSave={() => saveSection("projects", { items: content.projects })}
+            saving={saving === "projects"}
           />
 
           <SocialEditor
@@ -248,6 +249,17 @@ export default function AdminPage() {
             saving={saving === "social"}
           />
 
+          <EmailEditor
+            email={content.email}
+            onUpdate={(data) => {
+              setContent((prev) => prev ? { ...prev, email: data } : prev);
+              markDirty("email");
+            }}
+            dirty={dirtySections.has("email")}
+            onSave={() => saveSection("email", content.email)}
+            saving={saving === "email"}
+          />
+
           <FooterEditor
             footer={content.footer}
             onUpdate={(data) => {
@@ -257,6 +269,17 @@ export default function AdminPage() {
             dirty={dirtySections.has("footer")}
             onSave={() => saveSection("footer", content.footer)}
             saving={saving === "footer"}
+          />
+
+          <ReviewsEditor
+            reviews={content.reviews}
+            onUpdate={(data) => {
+              setContent((prev) => prev ? { ...prev, reviews: data } : prev);
+              markDirty("reviews");
+            }}
+            dirty={dirtySections.has("reviews")}
+            onSave={() => saveSection("reviews", { items: content.reviews })}
+            saving={saving === "reviews"}
           />
         </div>
       </div>
@@ -542,113 +565,162 @@ function ExperienceEditor({
   );
 }
 
-function ProjectEditor({
-  project,
+function ProjectsEditor({
+  projects,
   onUpdate,
   dirty,
   onSave,
   saving,
 }: {
-  project: Project;
-  onUpdate: (proj: Project) => void;
+  projects: Project[];
+  onUpdate: (projects: Project[]) => void;
 } & Pick<SectionEditorProps, "dirty" | "onSave" | "saving">) {
-  function updateItem(index: number, field: string, value: string) {
-    const items = project.items.map((item, i) =>
-      i === index ? { ...item, [field]: value } : item
+  function updateProject(index: number, field: string, value: string) {
+    const next = projects.map((p, i) =>
+      i === index ? { ...p, [field]: value } : p
     );
-    onUpdate({ ...project, items });
+    onUpdate(next);
   }
 
-  function addItem() {
-    onUpdate({
-      ...project,
-      items: [...project.items, { label: "", detail: "" }],
+  function updateProjectItem(
+    projIndex: number,
+    itemIndex: number,
+    field: string,
+    value: string
+  ) {
+    const next = projects.map((p, i) => {
+      if (i !== projIndex) return p;
+      return {
+        ...p,
+        items: p.items.map((item, j) =>
+          j === itemIndex ? { ...item, [field]: value } : item
+        ),
+      };
     });
+    onUpdate(next);
   }
 
-  function removeItem(index: number) {
-    onUpdate({
-      ...project,
-      items: project.items.filter((_, i) => i !== index),
-    });
+  function addProjectItem(projIndex: number) {
+    const next = projects.map((p, i) =>
+      i === projIndex
+        ? { ...p, items: [...p.items, { label: "", detail: "" }] }
+        : p
+    );
+    onUpdate(next);
+  }
+
+  function removeProjectItem(projIndex: number, itemIndex: number) {
+    const next = projects.map((p, i) =>
+      i === projIndex
+        ? { ...p, items: p.items.filter((_, j) => j !== itemIndex) }
+        : p
+    );
+    onUpdate(next);
+  }
+
+  function addProject() {
+    onUpdate([
+      ...projects,
+      { title: "", period: "", items: [{ label: "", detail: "" }] },
+    ]);
+  }
+
+  function removeProject(index: number) {
+    onUpdate(projects.filter((_, i) => i !== index));
   }
 
   return (
     <SectionEditor
-      label="Project"
-      section="project"
+      label="Projects"
+      section="projects"
       dirty={dirty}
       onSave={onSave}
       saving={saving}
     >
-      <div className="flex flex-col gap-3">
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">
-              Title
-            </label>
-            <input
-              className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-3 py-2 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
-              value={project.title}
-              onChange={(e) =>
-                onUpdate({ ...project, title: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">
-              Period
-            </label>
-            <input
-              className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-3 py-2 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
-              value={project.period}
-              onChange={(e) =>
-                onUpdate({ ...project, period: e.target.value })
-              }
-            />
-          </div>
-        </div>
-        <div>
-          <label className="mb-2 block text-[10px] uppercase tracking-wider text-[#555570]">
-            Items
-          </label>
-          <div className="flex flex-col gap-2">
-            {project.items.map((item, i) => (
-              <div
-                key={i}
-                className="rounded border border-[#2a2a3a] bg-[#1a1a2e] p-3"
+      <div className="flex flex-col gap-4">
+        {projects.map((project, pi) => (
+          <div
+            key={pi}
+            className="rounded-lg border border-[#2a2a3a] bg-[#1a1a2e] p-4"
+          >
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-wider text-[#555570]">
+                Project {pi + 1}
+              </span>
+              <button
+                onClick={() => removeProject(pi)}
+                className="text-xs text-red-400 hover:text-red-300"
               >
-                <div className="mb-2 flex gap-2">
-                  <input
-                    className="flex-1 rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
-                    value={item.label}
-                    onChange={(e) => updateItem(i, "label", e.target.value)}
-                    placeholder="Label"
-                  />
-                  <button
-                    onClick={() => removeItem(i)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                Remove project
+              </button>
+            </div>
+            <div className="mb-3 grid grid-cols-2 gap-3">
+              <input
+                className="rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                value={project.title}
+                onChange={(e) => updateProject(pi, "title", e.target.value)}
+                placeholder="Title"
+              />
+              <input
+                className="rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                value={project.period}
+                onChange={(e) => updateProject(pi, "period", e.target.value)}
+                placeholder="Period"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-[10px] uppercase tracking-wider text-[#555570]">
+                Items
+              </label>
+              <div className="flex flex-col gap-2">
+                {project.items.map((item, ii) => (
+                  <div
+                    key={ii}
+                    className="rounded border border-[#2a2a3a] bg-[#0a0a0f] p-2"
                   >
-                    Remove
-                  </button>
-                </div>
-                <textarea
-                  className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
-                  rows={2}
-                  value={item.detail}
-                  onChange={(e) => updateItem(i, "detail", e.target.value)}
-                  placeholder="Detail"
-                />
+                    <div className="mb-2 flex gap-2">
+                      <input
+                        className="flex-1 rounded border border-[#2a2a3a] bg-[#1a1a2e] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                        value={item.label}
+                        onChange={(e) =>
+                          updateProjectItem(pi, ii, "label", e.target.value)
+                        }
+                        placeholder="Label"
+                      />
+                      <button
+                        onClick={() => removeProjectItem(pi, ii)}
+                        className="text-xs text-red-400 hover:text-red-300"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                    <textarea
+                      className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                      rows={2}
+                      value={item.detail}
+                      onChange={(e) =>
+                        updateProjectItem(pi, ii, "detail", e.target.value)
+                      }
+                      placeholder="Detail"
+                    />
+                  </div>
+                ))}
+                <button
+                  onClick={() => addProjectItem(pi)}
+                  className="self-start rounded border border-dashed border-[#2a2a3a] px-3 py-1 text-xs text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#a0a0c0]"
+                >
+                  + Add item
+                </button>
               </div>
-            ))}
-            <button
-              onClick={addItem}
-              className="self-start rounded border border-dashed border-[#2a2a3a] px-3 py-1 text-xs text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#a0a0c0]"
-            >
-              + Add item
-            </button>
+            </div>
           </div>
-        </div>
+        ))}
+        <button
+          onClick={addProject}
+          className="self-start rounded border border-dashed border-[#2a2a3a] px-4 py-2 text-sm text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#a0a0c0]"
+        >
+          + Add project
+        </button>
       </div>
     </SectionEditor>
   );
@@ -692,6 +764,51 @@ function SocialEditor({
   );
 }
 
+function EmailEditor({
+  email,
+  onUpdate,
+  dirty,
+  onSave,
+  saving,
+}: {
+  email: Email;
+  onUpdate: (e: Email) => void;
+} & Pick<SectionEditorProps, "dirty" | "onSave" | "saving">) {
+  return (
+    <SectionEditor
+      label="Contact Email"
+      section="email"
+      dirty={dirty}
+      onSave={onSave}
+      saving={saving}
+    >
+      <div className="flex flex-col gap-3">
+        <div>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">
+            Recipient Email
+          </label>
+          <input
+            className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-3 py-2 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+            value={email.to}
+            onChange={(e) => onUpdate({ ...email, to: e.target.value })}
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">
+            Subject Template
+          </label>
+          <input
+            className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-3 py-2 text-sm text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+            value={email.subject}
+            onChange={(e) => onUpdate({ ...email, subject: e.target.value })}
+          />
+          <p className="mt-1 text-[10px] text-[#555570]">Use %email% as placeholder for the sender&apos;s address</p>
+        </div>
+      </div>
+    </SectionEditor>
+  );
+}
+
 function FooterEditor({
   footer,
   onUpdate,
@@ -715,6 +832,124 @@ function FooterEditor({
         value={footer.text}
         onChange={(e) => onUpdate({ ...footer, text: e.target.value })}
       />
+    </SectionEditor>
+  );
+}
+
+function ReviewsEditor({
+  reviews,
+  onUpdate,
+  dirty,
+  onSave,
+  saving,
+}: {
+  reviews: Review[];
+  onUpdate: (r: Review[]) => void;
+} & Pick<SectionEditorProps, "dirty" | "onSave" | "saving">) {
+  function updateReview(index: number, field: string, value: string | number | boolean | undefined) {
+    const next = reviews.map((r, i) =>
+      i === index ? { ...r, [field]: value } : r
+    );
+    onUpdate(next);
+  }
+
+  function addReview() {
+    onUpdate([...reviews, { author: "", rating: 5, date: "", text: "" }]);
+  }
+
+  function removeReview(index: number) {
+    onUpdate(reviews.filter((_, i) => i !== index));
+  }
+
+  return (
+    <SectionEditor
+      label="Reviews"
+      section="reviews"
+      dirty={dirty}
+      onSave={onSave}
+      saving={saving}
+    >
+      <div className="flex flex-col gap-4">
+        {reviews.map((review, i) => (
+          <div key={i} className="rounded-lg border border-[#2a2a3a] bg-[#1a1a2e] p-4">
+            <div className="mb-3 flex items-center justify-between">
+              <span className="text-[10px] uppercase tracking-wider text-[#555570]">
+                Review {i + 1}
+              </span>
+              <button onClick={() => removeReview(i)} className="text-xs text-red-400 hover:text-red-300">
+                Remove
+              </button>
+            </div>
+            <div className="mb-3 grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">Author</label>
+                <input
+                  className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                  value={review.author}
+                  onChange={(e) => updateReview(i, "author", e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">Date</label>
+                <input
+                  className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                  value={review.date}
+                  onChange={(e) => updateReview(i, "date", e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="mb-3">
+              <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">Text</label>
+              <textarea
+                className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                rows={3}
+                value={review.text}
+                onChange={(e) => updateReview(i, "text", e.target.value)}
+              />
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              <div>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">Rating (1-5)</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={5}
+                  className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                  value={review.rating}
+                  onChange={(e) => updateReview(i, "rating", Number(e.target.value))}
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-[10px] uppercase tracking-wider text-[#555570]">Helpful count</label>
+                <input
+                  type="number"
+                  min={0}
+                  className="w-full rounded border border-[#2a2a3a] bg-[#0a0a0f] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]"
+                  value={review.helpful || ""}
+                  onChange={(e) => updateReview(i, "helpful", e.target.value ? Number(e.target.value) : undefined)}
+                />
+              </div>
+              <div className="flex items-end pb-1">
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-[#7070a0]">
+                  <input
+                    type="checkbox"
+                    checked={review.isDeveloper || false}
+                    onChange={(e) => updateReview(i, "isDeveloper", e.target.checked)}
+                    className="accent-emerald-500"
+                  />
+                  Developer reply
+                </label>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button
+          onClick={addReview}
+          className="self-start rounded border border-dashed border-[#2a2a3a] px-4 py-2 text-sm text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#a0a0c0]"
+        >
+          + Add review
+        </button>
+      </div>
     </SectionEditor>
   );
 }

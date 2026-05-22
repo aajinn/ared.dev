@@ -1,6 +1,6 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
-import { getAllContent, updateContent } from "@/lib/content";
+import { getAllContent, updateContent } from "@/lib/data";
 
 function isAuthorized(request: NextRequest): boolean {
   const adminKey = process.env.ADMIN_KEY;
@@ -32,11 +32,12 @@ export async function PUT(request: NextRequest) {
   const validSections = [
     "skills",
     "experience",
-    "project",
+    "projects",
     "hero",
     "social",
     "email",
     "footer",
+    "reviews",
   ];
 
   if (!validSections.includes(section)) {
@@ -56,6 +57,7 @@ export async function PUT(request: NextRequest) {
   }
 
   revalidatePath("/");
+  revalidateTag("content", { expire: 0 });
 
   return NextResponse.json({ success: true });
 }

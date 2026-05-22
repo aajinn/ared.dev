@@ -1,22 +1,15 @@
-import fs from "fs";
-import path from "path";
+import { cacheLife } from "next/cache";
 import { ReviewGrid } from "./components/ReviewGrid";
 import { ReviewScroll } from "./components/ReviewScroll";
-import { getAllContent } from "@/lib/content";
+import { HireMeButton } from "./components/HireMeButton";
+import { ContactForm } from "./components/ContactForm";
+import { getAllContent } from "@/lib/data";
 
 export default async function Home() {
-  const [publicDir, content] = await Promise.all([
-    Promise.resolve(path.join(process.cwd(), "public")),
-    getAllContent(),
-  ]);
+  "use cache";
+  cacheLife("max");
 
-  const reviewImages = fs
-    .readdirSync(publicDir)
-    .filter((f) => /^r\d+\.(png|jpg|jpeg|webp)$/i.test(f))
-    .sort()
-    .map((f) => `/${f}`);
-
-  const emailHref = `https://mail.google.com/mail/?view=cm&to=${content.email.to}&su=${content.email.subject}&body=${content.email.body}`;
+  const content = await getAllContent();
 
   return (
     <main className="relative bg-[#0a0a0f] text-[#e8e8f0] overflow-x-hidden">
@@ -47,22 +40,7 @@ export default async function Home() {
             ))}
           </div>
 
-          {/* Email CTA — prominent for HR */}
-          <a
-            href={emailHref}
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 flex w-full max-w-xs items-center justify-center gap-3 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90 active:scale-95 sm:w-auto lg:justify-start"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
-              <path d="M20 4H4C2.9 4 2 4.9 2 6v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2z" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M2 6l10 7 10-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <span className="flex flex-col items-start leading-tight">
-              <span>Hire Me</span>
-              <span className="text-xs font-normal opacity-70">{content.email.to}</span>
-            </span>
-          </a>
+          <HireMeButton email={content.email.to} />
 
           {/* Social links */}
           <div className="mt-4 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 lg:justify-start">
@@ -89,15 +67,15 @@ export default async function Home() {
         </div>
 
         {/* Right: reviews — desktop scroll reveal */}
-        {reviewImages.length > 0 && (
+        {content.reviews.length > 0 && (
           <div className="hidden lg:block lg:w-80 xl:w-96 lg:shrink-0">
-            <ReviewScroll images={reviewImages} />
+            <ReviewScroll reviews={content.reviews} />
           </div>
         )}
       </section>
 
       {/* Reviews — mobile only */}
-      {reviewImages.length > 0 && (
+      {content.reviews.length > 0 && (
         <section className="px-5 py-16 bg-[#0e0e16] lg:hidden sm:px-6 sm:py-24 overflow-hidden">
           <div className="mx-auto w-full max-w-3xl">
             <div className="mb-8 flex items-center gap-4 sm:mb-10">
@@ -107,8 +85,7 @@ export default async function Home() {
             </div>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
               <ReviewGrid
-                images={reviewImages}
-                sizes="(max-width: 640px) 100vw, 50vw"
+                reviews={content.reviews}
                 columns={2}
               />
             </div>
@@ -175,26 +152,40 @@ export default async function Home() {
           <div className="mx-auto w-full max-w-3xl">
             <div className="mb-8 flex items-center gap-4 sm:mb-10">
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">05</span>
-              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Project</h2>
+              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Projects</h2>
               <div className="h-px flex-1 bg-[#1e1e2e]" />
             </div>
             <div className="flex flex-col gap-4 sm:gap-6">
-              <div className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
-                <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
-                  <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{content.project.title}</h3>
-                  <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
-                    {content.project.period}
-                  </span>
+              {content.projects.map((project) => (
+                <div key={project.title} className="min-w-0 rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-4 sm:p-6">
+                  <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
+                    <h3 className="text-sm font-semibold leading-snug text-[#e8e8f0] sm:text-base">{project.title}</h3>
+                    <span className="rounded-full border border-[#2a2a3a] px-3 py-0.5 text-[10px] text-[#555570] sm:text-xs">
+                      {project.period}
+                    </span>
+                  </div>
+                  <ul className="flex flex-col gap-2">
+                    {project.items.map((item) => (
+                      <li key={item.label} className="flex gap-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">
+                        <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3a3a5a]" />
+                        <span><strong className="text-[#c0c0e0]">{item.label}</strong> — {item.detail}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="flex flex-col gap-2">
-                  {content.project.items.map((item) => (
-                    <li key={item.label} className="flex gap-3 text-xs text-[#7070a0] leading-relaxed sm:text-sm">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#3a3a5a]" />
-                      <span><strong className="text-[#c0c0e0]">{item.label}</strong> — {item.detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section className="px-5 pb-16 sm:px-6 sm:pb-24">
+          <div className="mx-auto w-full max-w-3xl">
+            <div className="mb-8 flex items-center gap-4 sm:mb-10">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#555570] sm:text-xs">06</span>
+              <h2 className="text-lg font-semibold tracking-wide text-[#e8e8f0] sm:text-xl">Contact</h2>
+              <div className="h-px flex-1 bg-[#1e1e2e]" />
+            </div>
+            <div className="rounded-lg border border-[#1e1e2e] bg-[#0a0a0f] p-5 sm:p-6">
+              <ContactForm />
             </div>
           </div>
         </section>
