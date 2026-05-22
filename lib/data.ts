@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from "next/cache";
-import { getSupabase } from "./supabase";
+import { getPublicClient, getAdminClient } from "./supabase";
 import type {
   SiteContent,
   SkillCategory,
@@ -19,7 +19,7 @@ export async function getAllContent(): Promise<SiteContent> {
   cacheTag("content");
 
   try {
-    const supabase = getSupabase();
+    const supabase = getPublicClient();
     const { data, error } = await supabase
       .from("content")
       .select("section, data")
@@ -55,7 +55,7 @@ export async function updateContent(
   data: Record<string, any>
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = getSupabase();
+    const supabase = getAdminClient();
     const { error } = await supabase
       .from("content")
       .upsert({ section, data, updated_at: new Date().toISOString() }, { onConflict: "section" });
