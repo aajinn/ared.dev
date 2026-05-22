@@ -10,6 +10,7 @@
     "compress": "node scripts/compress-images.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.106.1",
     "next": "16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4"
