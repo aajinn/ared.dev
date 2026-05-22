@@ -4,27 +4,45 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-/**
- * Public client — uses the anon key with RLS.
- * Only SELECT is allowed via RLS policy.
- * Use ONLY for read operations (getAllContent).
- */
+const FETCH_TIMEOUT = 10_000;
+
+async function fetchWithTimeout(
+  input: RequestInfo | URL,
+  init?: RequestInit
+): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+  try {
+    const response = await fetch(input, { ...init, signal: controller.signal });
+    return response;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+let publicClient: ReturnType<typeof createClient> | null = null;
+let adminClient: ReturnType<typeof createClient> | null = null;
+
 export function getPublicClient() {
   if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
-  return createClient(supabaseUrl, supabaseAnonKey);
+  if (!publicClient) {
+    publicClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { fetch: fetchWithTimeout },
+    });
+  }
+  return publicClient;
 }
 
-/**
- * Admin client — uses the service role key.
- * Bypasses all RLS. NEVER expose this to the browser
- * (must NOT use NEXT_PUBLIC_ prefix).
- * Use ONLY for write operations (updateContent).
- */
 export function getAdminClient() {
   if (!supabaseUrl || !supabaseServiceKey) {
     throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
   }
-  return createClient(supabaseUrl, supabaseServiceKey);
+  if (!adminClient) {
+    adminClient = createClient(supabaseUrl, supabaseServiceKey, {
+      global: { fetch: fetchWithTimeout },
+    });
+  }
+  return adminClient;
 }

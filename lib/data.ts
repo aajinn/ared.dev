@@ -20,10 +20,12 @@ export async function getAllContent(): Promise<SiteContent> {
 
   try {
     const supabase = getPublicClient();
-    const { data, error } = await supabase
+    const result = await supabase
       .from("content")
       .select("section, data")
       .order("section");
+    const data = result.data as { section: string; data: any }[] | null;
+    const error = result.error; 
 
     if (error) {
       console.error("Error fetching content:", error);
@@ -55,7 +57,13 @@ export async function updateContent(
   data: Record<string, any>
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    const supabase = getAdminClient();
+    let supabase: any;
+    try {
+      supabase = getAdminClient();
+    } catch {
+      supabase = getPublicClient();
+    }
+
     const { error } = await supabase
       .from("content")
       .upsert({ section, data, updated_at: new Date().toISOString() }, { onConflict: "section" });

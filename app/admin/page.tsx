@@ -92,7 +92,8 @@ export default function AdminPage() {
         });
         if (!res.ok) throw new Error((await res.json()).error || "Save failed");
       } catch (e) {
-        setStatus({ type: "error", text: `Failed to save ${section}` });
+        const msg = e instanceof Error ? e.message : "Unknown error";
+        setStatus({ type: "error", text: `Failed to save ${section}: ${msg}` });
         setSaving(false);
         return;
       }
