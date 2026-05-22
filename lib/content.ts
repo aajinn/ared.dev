@@ -59,6 +59,40 @@ export type Footer = {
   text: string;
 };
 
+export type ThemeConfig = {
+  mode: "dark" | "light";
+  background: string;
+  surface: string;
+  surfaceAlt: string;
+  border: string;
+  textPrimary: string;
+  textSecondary: string;
+  textMuted: string;
+  accent: string;
+  accentHover: string;
+  primary: string;
+};
+
+export type Page = {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SectionConfig = {
+  key: string;
+  label: string;
+  visible: boolean;
+};
+
+export type LayoutConfig = {
+  sections: SectionConfig[];
+};
+
 export type SiteContent = {
   skills: SkillCategory[];
   experience: Experience;
@@ -68,6 +102,9 @@ export type SiteContent = {
   email: Email;
   footer: Footer;
   reviews: Review[];
+  theme: ThemeConfig;
+  pages: Page[];
+  layout: LayoutConfig;
 };
 
 export function getDefaultContent(): SiteContent {
@@ -172,5 +209,30 @@ export function getDefaultContent(): SiteContent {
       { author: "Mohan Krishna Upputuri", rating: 5, date: "10 Oct 2025", text: "Helps a lot with realtime tracking", helpful: 1 },
       { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "10 Oct 2025", text: "Glad to hear it's helping! Thanks for the feedback 🙌\n\nWe just rolled out version 3.2.1. (soon hit production)\n\nThanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
     ],
+    theme: {
+      mode: "dark",
+      background: "#0a0a0f",
+      surface: "#0e0e16",
+      surfaceAlt: "#1a1a2e",
+      border: "#1e1e2e",
+      textPrimary: "#e8e8f0",
+      textSecondary: "#7070a0",
+      textMuted: "#555570",
+      accent: "#6060a0",
+      accentHover: "#8080c0",
+      primary: "#ffffff",
+    },
+    pages: [],
+    layout: {
+      sections: [
+        { key: "hero", label: "Hero", visible: true },
+        { key: "reviews", label: "Reviews", visible: true },
+        { key: "skills", label: "Skills", visible: true },
+        { key: "experience", label: "Experience", visible: true },
+        { key: "projects", label: "Projects", visible: true },
+        { key: "contact", label: "Contact", visible: true },
+        { key: "footer", label: "Footer", visible: true },
+      ],
+    },
   };
 }
