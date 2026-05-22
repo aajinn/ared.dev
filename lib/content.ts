@@ -1,5 +1,3 @@
-import { getSupabase } from "./supabase";
-
 export type SkillCategory = {
   category: string;
   items: string[];
@@ -48,6 +46,15 @@ export type Email = {
   body: string;
 };
 
+export type Review = {
+  author: string;
+  rating: number;
+  date: string;
+  text: string;
+  helpful?: number;
+  isDeveloper?: boolean;
+};
+
 export type Footer = {
   text: string;
 };
@@ -55,64 +62,13 @@ export type Footer = {
 export type SiteContent = {
   skills: SkillCategory[];
   experience: Experience;
-  project: Project;
+  projects: Project[];
   hero: Hero;
   social: Social;
   email: Email;
   footer: Footer;
+  reviews: Review[];
 };
-
-export async function getAllContent(): Promise<SiteContent> {
-  try {
-    const supabase = getSupabase();
-    const { data, error } = await supabase
-      .from("content")
-      .select("section, data")
-      .order("section");
-
-    if (error) {
-      console.error("Error fetching content:", error);
-      return getDefaultContent();
-    }
-
-    const map: Record<string, any> = {};
-    for (const row of data || []) {
-      map[row.section] = row.data;
-    }
-
-    return {
-      skills: (map.skills?.items as SkillCategory[]) || getDefaultContent().skills,
-      experience: (map.experience as Experience) || getDefaultContent().experience,
-      project: (map.project as Project) || getDefaultContent().project,
-      hero: (map.hero as Hero) || getDefaultContent().hero,
-      social: (map.social as Social) || getDefaultContent().social,
-      email: (map.email as Email) || getDefaultContent().email,
-      footer: (map.footer as Footer) || getDefaultContent().footer,
-    };
-  } catch {
-    return getDefaultContent();
-  }
-}
-
-export async function updateContent(
-  section: string,
-  data: Record<string, any>
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    const supabase = getSupabase();
-    const { error } = await supabase
-      .from("content")
-      .upsert({ section, data, updated_at: new Date().toISOString() }, { onConflict: "section" });
-
-    if (error) {
-      return { success: false, error: error.message };
-    }
-
-    return { success: true };
-  } catch (e) {
-    return { success: false, error: e instanceof Error ? e.message : "Unknown error" };
-  }
-}
 
 export function getDefaultContent(): SiteContent {
   return {
@@ -144,32 +100,34 @@ export function getDefaultContent(): SiteContent {
         },
       ],
     },
-    project: {
-      title: "TaskFlow – Full-Stack Project Management App",
-      period: "2026",
-      items: [
-        {
-          label: "Scalable Architecture",
-          detail:
-            "Next.js (React) frontend and Express.js Node.js backend, using modular service-based backend architecture.",
-        },
-        {
-          label: "Real-Time Collaboration",
-          detail:
-            "WebSockets eliminating manual page refreshes for collaborative teams.",
-        },
-        {
-          label: "Auth & Access Control",
-          detail:
-            "JWT authentication and role‑based access (Admin/Member) to secure multi‑user workspaces.",
-        },
-        {
-          label: "Polished UI/UX",
-          detail:
-            "Mobile‑first, responsive design with Tailwind CSS, skeleton loaders, and optimistic UI updates.",
-        },
-      ],
-    },
+    projects: [
+      {
+        title: "TaskFlow – Full-Stack Project Management App",
+        period: "2026",
+        items: [
+          {
+            label: "Scalable Architecture",
+            detail:
+              "Next.js (React) frontend and Express.js Node.js backend, using modular service-based backend architecture.",
+          },
+          {
+            label: "Real-Time Collaboration",
+            detail:
+              "WebSockets eliminating manual page refreshes for collaborative teams.",
+          },
+          {
+            label: "Auth & Access Control",
+            detail:
+              "JWT authentication and role‑based access (Admin/Member) to secure multi‑user workspaces.",
+          },
+          {
+            label: "Polished UI/UX",
+            detail:
+              "Mobile‑first, responsive design with Tailwind CSS, skeleton loaders, and optimistic UI updates.",
+          },
+        ],
+      },
+    ],
     hero: {
       subtitle: "Full Stack Product Builder",
       description:
@@ -202,5 +160,17 @@ export function getDefaultContent(): SiteContent {
     footer: {
       text: "Ajin Varghese Chandy · Full Stack Product Builder",
     },
+    reviews: [
+      { author: "Scott Andrew", rating: 5, date: "4 Feb 2026", text: "My internet is too slow to be sure its really useful.", helpful: 2 },
+      { author: "ปรีชา รุ่งรัศมีธรรม", rating: 4, date: "18 Jan 2026", text: "good", helpful: 1 },
+      { author: "Creative World!", rating: 5, date: "5 Jan 2026", text: "not bad ." },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "5 Jan 2026", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "विधासागर कुमार", rating: 4, date: "28 Dec 2025", text: "thanks so much" },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "5 Jan 2026", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "Casion Yu", rating: 5, date: "24 Dec 2025", text: "great design", helpful: 1 },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "24 Dec 2025", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "Mohan Krishna Upputuri", rating: 5, date: "10 Oct 2025", text: "Helps a lot with realtime tracking", helpful: 1 },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "10 Oct 2025", text: "Glad to hear it's helping! Thanks for the feedback 🙌\n\nWe just rolled out version 3.2.1. (soon hit production)\n\nThanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+    ],
   };
 }
