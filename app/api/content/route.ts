@@ -38,6 +38,9 @@ export async function PUT(request: NextRequest) {
     "email",
     "footer",
     "reviews",
+    "theme",
+    "pages",
+    "layout",
   ];
 
   if (!validSections.includes(section)) {
