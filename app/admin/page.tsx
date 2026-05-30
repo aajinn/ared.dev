@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback, useMemo } from "react";
+import { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import { MarkdownContent } from "@/app/components/MarkdownContent";
 import type {
   SiteContent,
@@ -32,6 +32,7 @@ const SECTIONS: SectionDef[] = [
   { key: "theme", label: "Theme", group: "config", icon: "T" },
   { key: "pages", label: "Pages", group: "config", icon: "Pg" },
   { key: "layout", label: "Layout", group: "config", icon: "L" },
+  { key: "images", label: "Images", group: "config", icon: "I" },
 ];
 
 const GROUP_LABELS: Record<string, string> = {
@@ -378,6 +379,20 @@ export default function AdminPage() {
             <p className="text-center text-sm text-[#555570] py-12">No sections matching &quot;{search}&quot;</p>
           )}
           {filteredSections.map(({ key, label }) => {
+            if (key === "images") {
+              return (
+                <CollapsibleSection
+                  key={key}
+                  label={label}
+                  section={key}
+                  isOpen={openSection === key}
+                  onToggle={() => setOpenSection(openSection === key ? null : key)}
+                  dirty={false}
+                >
+                  <ImageGallery adminKey={adminKey} />
+                </CollapsibleSection>
+              );
+            }
             const Editor = EDITOR_MAP[key];
             const sectionData = getSectionData(key, content);
             return (
@@ -432,7 +447,7 @@ function CollapsibleSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mb-3 rounded-lg border border-[#1e1e2e] bg-[#0e0e16] overflow-hidden">
+    <div className="mb-3 rounded-lg border border-[#1e1e2e] bg-[#0e0e16]">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between px-5 py-3 text-left transition hover:bg-[#12121e]"
@@ -537,12 +552,28 @@ function HeroEditor({
   hero: Hero;
   onUpdate: (hero: Hero) => void;
 }) {
+  const hb = hero.hireButton || { visible: true, label: "Hire Me" };
   return (
     <div className="flex flex-col gap-3">
       <Input label="Name" value={hero.name || ""} onChange={(e) => onUpdate({ ...hero, name: e.target.value })} />
       <Input label="Subtitle" value={hero.subtitle} onChange={(e) => onUpdate({ ...hero, subtitle: e.target.value })} />
       <Textarea label="Description" rows={2} value={hero.description} onChange={(e) => onUpdate({ ...hero, description: e.target.value })} />
       <Input label="Tags (comma-separated)" value={hero.tags.join(", ")} onChange={(e) => onUpdate({ ...hero, tags: e.target.value.split(",").map((s) => s.trim()) })} />
+      <div className="rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] p-4">
+        <p className="mb-3 text-[10px] uppercase tracking-wider text-[#555570]">Hire Button</p>
+        <div className="flex flex-col gap-3">
+          <label className="flex cursor-pointer items-center gap-2 text-xs text-[#7070a0]">
+            <input
+              type="checkbox"
+              checked={hb.visible}
+              onChange={(e) => onUpdate({ ...hero, hireButton: { ...hb, visible: e.target.checked } })}
+              className="accent-emerald-500"
+            />
+            Visible
+          </label>
+          <Input label="Button Label" value={hb.label} onChange={(e) => onUpdate({ ...hero, hireButton: { ...hb, label: e.target.value } })} />
+        </div>
+      </div>
     </div>
   );
 }
@@ -1193,6 +1224,25 @@ function PagesEditor({
   const [editedContent, setEditedContent] = useState("");
   const [preview, setPreview] = useState(false);
   const [newPage, setNewPage] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+
+  function insertImage(url: string) {
+    const ta = textareaRef.current;
+    const markdown = `![alt](${url})`;
+    if (ta) {
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      setEditedContent(editedContent.slice(0, start) + markdown + editedContent.slice(end));
+      requestAnimationFrame(() => {
+        ta.focus();
+        ta.selectionStart = ta.selectionEnd = start + markdown.length;
+      });
+    } else {
+      setEditedContent((prev) => prev + "\n" + markdown);
+    }
+    setShowImagePicker(false);
+  }
 
   function addPage() {
     const id = crypto.randomUUID();
@@ -1332,6 +1382,15 @@ function PagesEditor({
                 <span className="text-xs text-[#555570]">Markdown</span>
               </div>
               <div className="flex items-center gap-2">
+                {!preview && (
+                  <button
+                    type="button"
+                    onClick={() => setShowImagePicker(true)}
+                    className="rounded bg-[#1a1a2e] px-3 py-1 text-xs text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#e8e8f0]"
+                  >
+                    Image
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setPreview(!preview)}
@@ -1358,6 +1417,7 @@ function PagesEditor({
                 </div>
               ) : (
                 <textarea
+                  ref={textareaRef}
                   value={editedContent}
                   onChange={(e) => setEditedContent(e.target.value)}
                   className="h-full w-full resize-none border-0 bg-[#0a0a0f] px-5 py-4 text-sm text-[#e8e8f0] outline-none font-mono"
@@ -1386,6 +1446,13 @@ function PagesEditor({
             </div>
           </div>
         </div>
+      )}
+
+      {showImagePicker && (
+        <ImagePickerModal
+          onSelect={insertImage}
+          onClose={() => setShowImagePicker(false)}
+        />
       )}
     </div>
   );
@@ -1422,6 +1489,25 @@ function LayoutEditor({
   const [editSection, setEditSection] = useState<string | null>(null);
   const [markdownContent, setMarkdownContent] = useState("");
   const [preview, setPreview] = useState(false);
+  const layoutTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+
+  function insertImageInLayout(url: string) {
+    const ta = layoutTextareaRef.current;
+    const markdown = `![alt](${url})`;
+    if (ta) {
+      const start = ta.selectionStart;
+      const end = ta.selectionEnd;
+      setMarkdownContent(markdownContent.slice(0, start) + markdown + markdownContent.slice(end));
+      requestAnimationFrame(() => {
+        ta.focus();
+        ta.selectionStart = ta.selectionEnd = start + markdown.length;
+      });
+    } else {
+      setMarkdownContent((prev) => prev + "\n" + markdown);
+    }
+    setShowImagePicker(false);
+  }
 
   const editingSection = editSection ? layout.sections.find((s) => s.key === editSection) : null;
   const isCustom = editingSection ? !KNOWN_COMPONENTS.includes(editingSection.key) : false;
@@ -1452,31 +1538,15 @@ function LayoutEditor({
     onUpdate({ ...layout, sections: next });
   }
 
-  const [showAddMenu, setShowAddMenu] = useState(false);
-
-  function addSection(type: string) {
-    setShowAddMenu(false);
-    if (type === "custom") {
-      const base = "custom";
-      let i = 1;
-      while (layout.sections.some((s) => s.key === `${base}-${i}`)) i++;
-      const key = `${base}-${i}`;
-      onUpdate({
-        ...layout,
-        sections: [...layout.sections, { key, label: `Custom ${i}`, visible: true }],
-      });
-    } else {
-      const info = SECTION_TYPES.find((t) => t.key === type);
-      if (!info) return;
-      if (layout.sections.some((s) => s.key === type)) {
-        alert(`"${info.label}" section already exists in the layout.`);
-        return;
-      }
-      onUpdate({
-        ...layout,
-        sections: [...layout.sections, { key: info.key, label: info.label, visible: true }],
-      });
-    }
+  function addSection() {
+    const base = "custom";
+    let i = 1;
+    while (layout.sections.some((s) => s.key === `${base}-${i}`)) i++;
+    const key = `${base}-${i}`;
+    onUpdate({
+      ...layout,
+      sections: [...layout.sections, { key, label: `Custom ${i}`, visible: true }],
+    });
   }
 
   function startEditLabel(key: string, label: string) {
@@ -1594,31 +1664,13 @@ function LayoutEditor({
           </button>
         </div>
       ))}
-      <div className="relative mt-1">
+      <div className="mt-1">
         <button
-          onClick={() => setShowAddMenu(!showAddMenu)}
+          onClick={addSection}
           className="text-xs text-[#7070a0] hover:text-[#e8e8f0]"
         >
-          + Add section
+          + Add custom section
         </button>
-        {showAddMenu && (
-          <div className="absolute top-full left-0 z-20 mt-1 flex flex-col rounded-lg border border-[#2a2a3a] bg-[#0e0e16] py-1 shadow-lg min-w-40">
-            {SECTION_TYPES.map((type) => (
-              <button
-                key={type.key}
-                onClick={() => addSection(type.key)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs text-[#7070a0] transition hover:bg-[#1a1a2e] hover:text-[#e8e8f0] text-left"
-              >
-                {type.key === "custom" ? (
-                  <span className="text-[10px] text-[#555570]">#</span>
-                ) : (
-                  <span className="h-2 w-2 rounded-full bg-[#6060a0]" />
-                )}
-                {type.label}
-              </button>
-            ))}
-          </div>
-        )}
       </div>
 
       {/* Section editor popup */}
@@ -1631,15 +1683,26 @@ function LayoutEditor({
                 <span className="text-xs text-[#555570]">{isCustom ? "Markdown" : editingSection.key}</span>
               </div>
               {isCustom && (
-                <button
-                  type="button"
-                  onClick={() => setPreview(!preview)}
-                  className={`rounded px-3 py-1 text-xs transition ${
-                    preview ? "bg-[#6060a0] text-white" : "bg-[#1a1a2e] text-[#7070a0] hover:text-[#e8e8f0]"
-                  }`}
-                >
-                  {preview ? "Edit" : "Preview"}
-                </button>
+                <>
+                  {!preview && (
+                    <button
+                      type="button"
+                      onClick={() => setShowImagePicker(true)}
+                      className="rounded bg-[#1a1a2e] px-3 py-1 text-xs text-[#7070a0] transition hover:text-[#e8e8f0]"
+                    >
+                      Image
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => setPreview(!preview)}
+                    className={`rounded px-3 py-1 text-xs transition ${
+                      preview ? "bg-[#6060a0] text-white" : "bg-[#1a1a2e] text-[#7070a0] hover:text-[#e8e8f0]"
+                    }`}
+                  >
+                    {preview ? "Edit" : "Preview"}
+                  </button>
+                </>
               )}
             </div>
             <div className="flex flex-1 gap-0 overflow-hidden">
@@ -1654,6 +1717,7 @@ function LayoutEditor({
                   </div>
                 ) : (
                   <textarea
+                    ref={layoutTextareaRef}
                     value={markdownContent}
                     onChange={(e) => setMarkdownContent(e.target.value)}
                     className="h-full w-full resize-none border-0 bg-[#0a0a0f] px-5 py-4 text-sm text-[#e8e8f0] outline-none font-mono"
@@ -1697,6 +1761,291 @@ function LayoutEditor({
               )}
             </div>
           </div>
+        </div>
+      )}
+
+      {showImagePicker && (
+        <ImagePickerModal
+          onSelect={insertImageInLayout}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ───── Image Picker Modal ───── */
+
+let cachedImages: { name: string; url: string }[] | null = null;
+let cachedTime = 0;
+const CACHE_TTL = 60_000;
+
+function ImagePickerModal({
+  onSelect,
+  onClose,
+}: {
+  onSelect: (url: string) => void;
+  onClose: () => void;
+}) {
+  const [images, setImages] = useState<{ name: string; url: string }[]>(cachedImages || []);
+  const [loading, setLoading] = useState(!cachedImages);
+
+  useEffect(() => {
+    if (cachedImages && Date.now() - cachedTime < CACHE_TTL) {
+      setImages(cachedImages);
+      setLoading(false);
+      return;
+    }
+    fetch("/api/storage")
+      .then((r) => r.json())
+      .then((data) => {
+        const list = data.images || [];
+        cachedImages = list;
+        cachedTime = Date.now();
+        setImages(list);
+      })
+      .finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 p-4">
+      <div className="flex w-full max-w-2xl max-h-[70vh] flex-col overflow-hidden rounded-lg border border-[#2a2a3a] bg-[#0e0e16]">
+        <div className="flex items-center justify-between border-b border-[#2a2a3a] px-5 py-3">
+          <span className="text-sm font-medium text-[#e8e8f0]">Select Image</span>
+          <button onClick={onClose} className="text-sm text-[#555570] hover:text-[#e8e8f0]">
+            ✕
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#6060a0] border-t-transparent" />
+            </div>
+          ) : images.length === 0 ? (
+            <p className="py-12 text-center text-sm text-[#555570]">No images uploaded yet</p>
+          ) : (
+            <div className="grid grid-cols-3 gap-3 sm:grid-cols-4">
+              {images.map((img) => (
+                <button
+                  key={img.name}
+                  onClick={() => onSelect(img.url)}
+                  className="group relative aspect-square overflow-hidden rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] transition hover:border-[#6060a0]"
+                >
+                  <img
+                    src={img.url}
+                    alt={img.name}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-end bg-black/0 transition group-hover:bg-black/40">
+                    <span className="w-full truncate p-2 text-[10px] text-white opacity-0 transition group-hover:opacity-100">
+                      {img.name}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ───── Image Gallery ───── */
+
+type ImageItem = {
+  name: string;
+  url: string;
+  size?: number;
+};
+
+let galleryCache: ImageItem[] | null = null;
+let galleryCacheTime = 0;
+const GALLERY_CACHE_TTL = 30_000;
+
+function ImageGallery({ adminKey }: { adminKey: string }) {
+  const [images, setImages] = useState<ImageItem[]>(galleryCache || []);
+  const [loading, setLoading] = useState(!galleryCache);
+  const [uploading, setUploading] = useState(false);
+  const [customName, setCustomName] = useState("");
+  const [status, setStatus] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  function fetchImages(force = false) {
+    if (!force && galleryCache && Date.now() - galleryCacheTime < GALLERY_CACHE_TTL) {
+      setImages(galleryCache);
+      setLoading(false);
+      return;
+    }
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+    setLoading(true);
+    const url = force ? `/api/storage?_t=${Date.now()}` : "/api/storage";
+    fetch(url, { signal: controller.signal })
+      .then((r) => r.json())
+      .then((data) => {
+        const list = data.images || [];
+        galleryCache = list;
+        galleryCacheTime = Date.now();
+        cachedImages = list;
+        cachedTime = Date.now();
+        setImages(list);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(() => { fetchImages(); return () => abortRef.current?.abort(); }, []);
+
+  async function handleUpload(file: File) {
+    if (!file) return;
+    setUploading(true);
+    setStatus(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      if (customName.trim()) formData.append("name", customName.trim());
+      const res = await fetch("/api/storage", { method: "POST", body: formData });
+      if (!res.ok) throw new Error((await res.json()).error || "Upload failed");
+      setStatus({ type: "success", text: "Uploaded" });
+      setCustomName("");
+      fetchImages(true);
+    } catch (e) {
+      setStatus({ type: "error", text: e instanceof Error ? e.message : "Upload failed" });
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  async function deleteImage(name: string) {
+    if (!window.confirm(`Delete "${name}"?`)) return;
+    setImages((prev) => prev.filter((img) => img.name !== name));
+    try {
+      const res = await fetch("/api/storage", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: name }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error || "Delete failed");
+      fetchImages(true);
+    } catch (e) {
+      setStatus({ type: "error", text: e instanceof Error ? e.message : "Delete failed" });
+      fetchImages(true);
+    }
+  }
+
+  function copyMarkdown(url: string) {
+    navigator.clipboard.writeText(`![alt](${url})`);
+    setStatus({ type: "success", text: "Copied!" });
+    setTimeout(() => setStatus(null), 2000);
+  }
+
+  function formatSize(bytes?: number) {
+    if (!bytes) return "";
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / 1048576).toFixed(1)} MB`;
+  }
+
+  useEffect(() => {
+    if (!status) return;
+    const t = setTimeout(() => setStatus(null), 3000);
+    return () => clearTimeout(t);
+  }, [status]);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Upload */}
+      <div className="rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] p-4">
+        <p className="mb-3 text-[10px] uppercase tracking-wider text-[#555570]">Upload Image</p>
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleUpload(file);
+                if (fileInputRef.current) fileInputRef.current.value = "";
+              }}
+              className="text-xs text-[#7070a0] file:mr-3 file:cursor-pointer file:rounded file:border-0 file:bg-[#1a1a2e] file:px-3 file:py-1.5 file:text-xs file:text-[#e8e8f0] file:transition hover:file:bg-[#2a2a3a]"
+            />
+            {uploading && <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#6060a0] border-t-transparent" />}
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              value={customName}
+              onChange={(e) => setCustomName(e.target.value)}
+              placeholder="Custom filename (optional)"
+              className="flex-1 rounded border border-[#2a2a3a] bg-[#1a1a2e] px-3 py-1.5 text-xs text-[#e8e8f0] outline-none placeholder:text-[#555570] focus:border-[#6060a0]"
+            />
+            <span className="text-[10px] text-[#555570]">.ext</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Gallery */}
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-[10px] uppercase tracking-wider text-[#555570]">
+            {loading ? "Loading..." : `${images.length} image${images.length !== 1 ? "s" : ""}`}
+          </p>
+          <button
+            onClick={() => fetchImages(true)}
+            className="rounded border border-[#2a2a3a] px-2 py-0.5 text-[10px] text-[#7070a0] transition hover:border-[#6060a0] hover:text-[#e8e8f0]"
+            title="Refresh"
+          >
+            Refresh
+          </button>
+        </div>
+        {loading && !galleryCache ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#6060a0] border-t-transparent" />
+          </div>
+        ) : images.length === 0 ? (
+          <p className="py-12 text-center text-sm text-[#555570]">No images uploaded yet</p>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {images.map((img) => (
+              <div key={img.name} className="group relative rounded-lg border border-[#2a2a3a] bg-[#0a0a0f] overflow-hidden">
+                <div className="aspect-square overflow-hidden">
+                  <img src={img.url} alt={img.name} loading="lazy" className="h-full w-full object-cover" />
+                </div>
+                <div className="border-t border-[#2a2a3a] px-2 py-1.5">
+                  <p className="truncate text-[10px] text-[#7070a0]" title={img.name}>{img.name}</p>
+                  {img.size && <p className="text-[9px] text-[#555570]">{formatSize(img.size)}</p>}
+                </div>
+                <div className="absolute inset-x-0 top-0 flex justify-end gap-1 p-1.5 opacity-0 transition group-hover:opacity-100">
+                  <button
+                    onClick={() => copyMarkdown(img.url)}
+                    className="rounded bg-[#0e0e16]/80 px-2 py-1 text-[10px] text-[#e8e8f0] hover:bg-[#6060a0]/80 transition"
+                    title="Copy markdown"
+                  >
+                    MD
+                  </button>
+                  <button
+                    onClick={() => deleteImage(img.name)}
+                    className="rounded bg-red-600/80 px-2 py-1 text-[10px] text-white hover:bg-red-500 transition"
+                    title="Delete"
+                  >
+                    Del
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {status && (
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-lg px-4 py-2 text-sm shadow-lg ${
+          status.type === "success" ? "bg-emerald-600 text-white" : "bg-red-600 text-white"
+        }`}>
+          {status.text}
         </div>
       )}
     </div>
