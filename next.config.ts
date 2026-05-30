@@ -6,6 +6,13 @@ const nextConfig: NextConfig = {
     qualities: [75, 80, 90, 100],
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 2678400, // 31 days
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/images/**",
+      },
+    ],
   },
   async headers() {
     return [

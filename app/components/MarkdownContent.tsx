@@ -4,6 +4,19 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import type { Components } from "react-markdown";
+import Image from "next/image";
+
+function useOptimizedImage(src: string): { optimized: boolean; host: string } {
+  try {
+    const url = new URL(src);
+    return {
+      optimized: url.hostname.endsWith(".supabase.co"),
+      host: url.hostname,
+    };
+  } catch {
+    return { optimized: false, host: "" };
+  }
+}
 
 const overrides: Components = {
   a: ({ href, children }) => (
@@ -16,9 +29,41 @@ const overrides: Components = {
       {children}
     </a>
   ),
-  img: ({ src, alt }) => (
-    <img src={src} alt={alt} className="w-full rounded-lg" />
-  ),
+  img: ({ src, alt }) => {
+    if (typeof src !== "string") return null;
+    const { optimized } = useOptimizedImage(src);
+
+    if (optimized) {
+      return (
+        <span
+          className="relative block w-full overflow-hidden rounded-lg"
+          style={{ aspectRatio: "16/9" }}
+        >
+          <Image
+            src={src}
+            alt={alt || ""}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
+          />
+        </span>
+      );
+    }
+
+    return (
+      <span
+        className="relative block w-full overflow-hidden rounded-lg"
+        style={{ aspectRatio: "16/9" }}
+      >
+        <img
+          src={src}
+          alt={alt || ""}
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
+      </span>
+    );
+  },
 };
 
 export function MarkdownContent({ content }: { content: string }) {

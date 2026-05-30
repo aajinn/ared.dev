@@ -58,6 +58,9 @@ export default async function RootLayout({
 }) {
   const content = await getAllContent();
   const t = content.theme;
+  const storageOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
+    : null;
 
   return (
     <html lang="en" className={`${inter.variable} antialiased`} style={{ colorScheme: t.mode }}>
@@ -82,6 +85,8 @@ export default async function RootLayout({
           "--transition": t.transition || "0.2s",
         } as React.CSSProperties}
       >
+        {storageOrigin && <link rel="preconnect" href={storageOrigin} />}
+        {storageOrigin && <link rel="dns-prefetch" href={storageOrigin} />}
         {children}
       </body>
     </html>
