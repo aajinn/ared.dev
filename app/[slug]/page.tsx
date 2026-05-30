@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { getPages } from "@/lib/data";
+import { MarkdownContent } from "@/app/components/MarkdownContent";
 import Link from "next/link";
 
 export default function Page({
@@ -38,10 +39,7 @@ async function PageContent({
         <h1 className="mb-6 text-2xl font-bold text-[var(--color-text,#e8e8f0)] sm:text-3xl">
           {page.title}
         </h1>
-        <div
-          className="prose prose-invert max-w-none text-[var(--color-text-secondary,#7070a0)] [&_h2]:text-[var(--color-text,#e8e8f0)] [&_h3]:text-[var(--color-text,#e8e8f0)] [&_strong]:text-[var(--color-text,#e8e8f0)] [&_a]:text-[var(--color-accent,#6060a0)] [&_a]:underline"
-          dangerouslySetInnerHTML={{ __html: page.content }}
-        />
+        <MarkdownContent content={page.content} />
         <p className="mt-12 text-[10px] text-[var(--color-text-muted,#555570)] uppercase tracking-wider">
           Last updated: {page.updatedAt}
         </p>

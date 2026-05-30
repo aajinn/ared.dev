@@ -62,10 +62,11 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} antialiased`} style={{ colorScheme: t.mode }}>
       <body
-        className="font-sans overflow-x-hidden"
+        className="overflow-x-hidden"
         style={{
           backgroundColor: t.background,
           color: t.textPrimary,
+          fontFamily: t.fontFamily || "var(--font-inter), system-ui, sans-serif",
           "--color-bg": t.background,
           "--color-surface": t.surface,
           "--color-surface-alt": t.surfaceAlt,
@@ -76,6 +77,9 @@ export default async function RootLayout({
           "--color-accent": t.accent,
           "--color-accent-hover": t.accentHover,
           "--color-primary": t.primary,
+          "--radius": t.borderRadius || "12px",
+          "--shadow": t.shadow || "0 4px 24px rgba(0,0,0,0.3)",
+          "--transition": t.transition || "0.2s",
         } as React.CSSProperties}
       >
         {children}

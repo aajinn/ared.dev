@@ -3,6 +3,7 @@ import { ReviewGrid } from "./components/ReviewGrid";
 import { ReviewScroll } from "./components/ReviewScroll";
 import { HireMeButton } from "./components/HireMeButton";
 import { ContactForm } from "./components/ContactForm";
+import { MarkdownContent } from "./components/MarkdownContent";
 import { getAllContent } from "@/lib/data";
 
 export default async function Home() {
@@ -20,9 +21,9 @@ export default async function Home() {
             {content.hero.subtitle}
           </p>
           <h1 className="animate-slide-left hero-name text-[clamp(2.4rem,10vw,5.5rem)] uppercase tracking-[0.08em] leading-[0.95] text-[var(--color-text)]">
-            <span className="hero-name-line">Ajin</span>
-            <span className="hero-name-line">Varghese</span>
-            <span className="hero-name-line">Chandy</span>
+            {(content.hero.name || "Ajin Varghese Chandy").split(" ").map((part) => (
+              <span key={part} className="hero-name-line">{part}</span>
+            ))}
           </h1>
           <p className="mt-5 max-w-sm px-2 text-sm text-[var(--color-text-secondary)] leading-relaxed lg:px-0">
             {content.hero.description}
@@ -196,7 +197,16 @@ export default async function Home() {
         .filter((s) => s.visible)
         .map((s) => (
           <div key={s.key} className={s.key === "skills" || s.key === "experience" || s.key === "projects" || s.key === "contact" ? "bg-[var(--color-surface)]" : ""}>
-            {sectionComponents[s.key]?.()}
+            {sectionComponents[s.key]
+              ? sectionComponents[s.key]?.()
+              : s.content && (
+                  <section className="px-5 py-16 sm:px-6 sm:py-24">
+                    <div className="mx-auto max-w-3xl">
+                      <h2 className="mb-8 text-lg font-semibold tracking-wide text-[var(--color-text)] sm:text-xl">{s.label}</h2>
+                      <MarkdownContent content={s.content} />
+                    </div>
+                  </section>
+                )}
           </div>
         ))}
     </main>

@@ -29,6 +29,7 @@ export type Project = {
 };
 
 export type Hero = {
+  name: string;
   subtitle: string;
   description: string;
   tags: string[];
@@ -71,6 +72,10 @@ export type ThemeConfig = {
   accent: string;
   accentHover: string;
   primary: string;
+  fontFamily?: string;
+  borderRadius?: string;
+  shadow?: string;
+  transition?: string;
 };
 
 export type Page = {
@@ -87,6 +92,7 @@ export type SectionConfig = {
   key: string;
   label: string;
   visible: boolean;
+  content?: string;
 };
 
 export type LayoutConfig = {
@@ -166,6 +172,7 @@ export function getDefaultContent(): SiteContent {
       },
     ],
     hero: {
+      name: "Ajin Varghese Chandy",
       subtitle: "Full Stack Product Builder",
       description:
         "Building scalable web products focused on automation, real-time systems, and AI integrations.",
@@ -221,6 +228,10 @@ export function getDefaultContent(): SiteContent {
       accent: "#6060a0",
       accentHover: "#8080c0",
       primary: "#ffffff",
+      fontFamily: "Inter, system-ui, sans-serif",
+      borderRadius: "12px",
+      shadow: "0 4px 24px rgba(0,0,0,0.3)",
+      transition: "0.2s",
     },
     pages: [],
     layout: {
