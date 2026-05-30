@@ -33,6 +33,10 @@ export type Hero = {
   subtitle: string;
   description: string;
   tags: string[];
+  hireButton?: {
+    visible: boolean;
+    label: string;
+  };
 };
 
 export type Social = {
@@ -190,6 +194,7 @@ export function getDefaultContent(): SiteContent {
         "Web Performance",
         "Automation",
       ],
+      hireButton: { visible: true, label: "Hire Me" },
     },
     social: {
       github: "https://github.com/aajinn",

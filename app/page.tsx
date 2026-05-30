@@ -38,7 +38,12 @@ export default async function Home() {
               </span>
             ))}
           </div>
-          <HireMeButton email={content.email.to} />
+          {content.hero.hireButton?.visible !== false && (
+            <HireMeButton
+              email={content.email.to}
+              label={content.hero.hireButton?.label || "Hire Me"}
+            />
+          )}
           <div className="mt-4 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 lg:justify-start">
             <a href={content.social.github} target="_blank" rel="noreferrer"
               className="rounded border border-[var(--color-border)] py-3 text-center text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:px-5 sm:py-2">

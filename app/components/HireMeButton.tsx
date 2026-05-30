@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function HireMeButton({ email }: { email: string }) {
+export function HireMeButton({ email, label }: { email: string; label?: string }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -33,7 +33,7 @@ export function HireMeButton({ email }: { email: string }) {
         <path d="M2 6l10 7 10-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
       </svg>
       <span className="flex flex-col items-start leading-tight">
-        <span>{copied ? "Copied!" : "Hire Me"}</span>
+        <span>{copied ? "Copied!" : label || "Hire Me"}</span>
         <span className="text-xs font-normal opacity-70">{copied ? "Email copied to clipboard" : email}</span>
       </span>
     </button>
