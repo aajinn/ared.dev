@@ -1,0 +1,917 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "ared_tech_stack",
+        "label": "ared.dev Tech Stack",
+        "nodes": [
+          "ared_dev",
+          "Next.js",
+          "Tailwind_CSS",
+          "Supabase",
+          "PostgreSQL",
+          "Nodemailer",
+          "Node.js"
+        ],
+        "relation": "implement",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "public/llms.txt"
+      },
+      {
+        "id": "ajin_projects",
+        "label": "Ajin Varghese Chandy Projects",
+        "nodes": [
+          "Ajin_Varghese_Chandy",
+          "TaskFlow",
+          "RealTime_Speed_Monitor",
+          "MongooseNet"
+        ],
+        "relation": "form",
+        "confidence": "EXTRACTED",
+        "confidence_score": 1.0,
+        "source_file": "public/llms.txt"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "RootLayout",
+      "file_type": "code",
+      "source_file": "app/layout.tsx",
+      "source_location": "L54",
+      "id": "app_layout_rootlayout",
+      "community": 4,
+      "norm_label": "rootlayout"
+    },
+    {
+      "label": "POST",
+      "file_type": "code",
+      "source_file": "app/api/contact/route.ts",
+      "source_location": "L5",
+      "id": "contact_route_post",
+      "community": 5,
+      "norm_label": "post"
+    },
+    {
+      "label": "GET",
+      "file_type": "code",
+      "source_file": "app/api/content/route.ts",
+      "source_location": "L12",
+      "id": "content_route_get",
+      "community": 6,
+      "norm_label": "get"
+    },
+    {
+      "label": "PUT",
+      "file_type": "code",
+      "source_file": "app/api/content/route.ts",
+      "source_location": "L17",
+      "id": "content_route_put",
+      "community": 7,
+      "norm_label": "put"
+    },
+    {
+      "label": "GET",
+      "file_type": "code",
+      "source_file": "app/api/storage/route.ts",
+      "source_location": "L8",
+      "id": "storage_route_get",
+      "community": 8,
+      "norm_label": "get"
+    },
+    {
+      "label": "POST",
+      "file_type": "code",
+      "source_file": "app/api/storage/route.ts",
+      "source_location": "L42",
+      "id": "storage_route_post",
+      "community": 9,
+      "norm_label": "post"
+    },
+    {
+      "label": "DELETE",
+      "file_type": "code",
+      "source_file": "app/api/storage/route.ts",
+      "source_location": "L80",
+      "id": "storage_route_delete",
+      "community": 10,
+      "norm_label": "delete"
+    },
+    {
+      "label": "ContactForm",
+      "file_type": "code",
+      "source_file": "app/components/ContactForm.tsx",
+      "source_location": "L5",
+      "id": "components_contactform_contactform",
+      "community": 11,
+      "norm_label": "contactform"
+    },
+    {
+      "label": "HireMeButton",
+      "file_type": "code",
+      "source_file": "app/components/HireMeButton.tsx",
+      "source_location": "L5",
+      "id": "components_hiremebutton_hiremebutton",
+      "community": 12,
+      "norm_label": "hiremebutton"
+    },
+    {
+      "label": "MarkdownContent",
+      "file_type": "code",
+      "source_file": "app/components/MarkdownContent.tsx",
+      "source_location": "L69",
+      "id": "components_markdowncontent_markdowncontent",
+      "community": 13,
+      "norm_label": "markdowncontent"
+    },
+    {
+      "label": "ReviewScroll",
+      "file_type": "code",
+      "source_file": "app/components/ReviewScroll.tsx",
+      "source_location": "L29",
+      "id": "components_reviewscroll_reviewscroll",
+      "community": 14,
+      "norm_label": "reviewscroll"
+    },
+    {
+      "label": "SkillCategory",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L1",
+      "id": "lib_content_skillcategory",
+      "community": 15,
+      "norm_label": "skillcategory"
+    },
+    {
+      "label": "ExperienceItem",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L6",
+      "id": "lib_content_experienceitem",
+      "community": 16,
+      "norm_label": "experienceitem"
+    },
+    {
+      "label": "Experience",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L13",
+      "id": "lib_content_experience",
+      "community": 17,
+      "norm_label": "experience"
+    },
+    {
+      "label": "ProjectItem",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L20",
+      "id": "lib_content_projectitem",
+      "community": 18,
+      "norm_label": "projectitem"
+    },
+    {
+      "label": "Project",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L25",
+      "id": "lib_content_project",
+      "community": 19,
+      "norm_label": "project"
+    },
+    {
+      "label": "Hero",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L31",
+      "id": "lib_content_hero",
+      "community": 20,
+      "norm_label": "hero"
+    },
+    {
+      "label": "Social",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L42",
+      "id": "lib_content_social",
+      "community": 21,
+      "norm_label": "social"
+    },
+    {
+      "label": "Email",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L48",
+      "id": "lib_content_email",
+      "community": 22,
+      "norm_label": "email"
+    },
+    {
+      "label": "Review",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L54",
+      "id": "lib_content_review",
+      "community": 23,
+      "norm_label": "review"
+    },
+    {
+      "label": "Footer",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L63",
+      "id": "lib_content_footer",
+      "community": 24,
+      "norm_label": "footer"
+    },
+    {
+      "label": "ThemeConfig",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L67",
+      "id": "lib_content_themeconfig",
+      "community": 25,
+      "norm_label": "themeconfig"
+    },
+    {
+      "label": "Page",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L85",
+      "id": "lib_content_page",
+      "community": 26,
+      "norm_label": "page"
+    },
+    {
+      "label": "SectionConfig",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L95",
+      "id": "lib_content_sectionconfig",
+      "community": 27,
+      "norm_label": "sectionconfig"
+    },
+    {
+      "label": "LayoutConfig",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L102",
+      "id": "lib_content_layoutconfig",
+      "community": 28,
+      "norm_label": "layoutconfig"
+    },
+    {
+      "label": "SiteContent",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L106",
+      "id": "lib_content_sitecontent",
+      "community": 29,
+      "norm_label": "sitecontent"
+    },
+    {
+      "label": "getDefaultContent",
+      "file_type": "code",
+      "source_file": "lib/content.ts",
+      "source_location": "L120",
+      "id": "lib_content_getdefaultcontent",
+      "community": 30,
+      "norm_label": "getdefaultcontent"
+    },
+    {
+      "label": "getAllContent",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L19",
+      "id": "lib_data_getallcontent",
+      "community": 31,
+      "norm_label": "getallcontent"
+    },
+    {
+      "label": "getContentSection",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L63",
+      "id": "lib_data_getcontentsection",
+      "community": 32,
+      "norm_label": "getcontentsection"
+    },
+    {
+      "label": "getTheme",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L82",
+      "id": "lib_data_gettheme",
+      "community": 33,
+      "norm_label": "gettheme"
+    },
+    {
+      "label": "getLayout",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L87",
+      "id": "lib_data_getlayout",
+      "community": 34,
+      "norm_label": "getlayout"
+    },
+    {
+      "label": "getPages",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L92",
+      "id": "lib_data_getpages",
+      "community": 35,
+      "norm_label": "getpages"
+    },
+    {
+      "label": "updateContent",
+      "file_type": "code",
+      "source_file": "lib/data.ts",
+      "source_location": "L97",
+      "id": "lib_data_updatecontent",
+      "community": 36,
+      "norm_label": "updatecontent"
+    },
+    {
+      "label": "getPublicClient",
+      "file_type": "code",
+      "source_file": "lib/supabase.ts",
+      "source_location": "L26",
+      "id": "lib_supabase_getpublicclient",
+      "community": 37,
+      "norm_label": "getpublicclient"
+    },
+    {
+      "label": "getAdminClient",
+      "file_type": "code",
+      "source_file": "lib/supabase.ts",
+      "source_location": "L38",
+      "id": "lib_supabase_getadminclient",
+      "community": 38,
+      "norm_label": "getadminclient"
+    },
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "AGENTS_md",
+      "community": 2,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "CLAUDE_md",
+      "community": 2,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "README.md",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "README_md",
+      "community": 3,
+      "norm_label": "readme.md"
+    },
+    {
+      "label": "Google Site Verification",
+      "file_type": "document",
+      "source_file": "public/google5c8c2726fea42634.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "google_verify_html",
+      "community": 39,
+      "norm_label": "google site verification"
+    },
+    {
+      "label": "llms.txt",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "llms_txt",
+      "community": 1,
+      "norm_label": "llms.txt"
+    },
+    {
+      "label": "Ajin Varghese Chandy",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "llms.txt describes Ajin Varghese Chandy as a Full Stack Product Builder who designs, builds, and ships scalable web products, with expertise in JavaScript/TypeScript, React/Next.js, Node.js, and PostgreSQL/MongoDB.",
+      "id": "Ajin_Varghese_Chandy",
+      "community": 0,
+      "norm_label": "ajin varghese chandy"
+    },
+    {
+      "label": "ared.dev Portfolio",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://ared.dev",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Single-page portfolio site with hero, skills, technical experience, projects, reviews, and contact form. Self-hosted Next.js with Supabase, Tailwind CSS, and Nodemailer.",
+      "id": "ared_dev",
+      "community": 1,
+      "norm_label": "ared.dev portfolio"
+    },
+    {
+      "label": "Next.js",
+      "file_type": "code",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": "https://nextjs.org",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Next.js",
+      "community": 2,
+      "norm_label": "next.js"
+    },
+    {
+      "label": "create-next-app",
+      "file_type": "code",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": "https://nextjs.org/docs/app/api-reference/cli/create-next-app",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "create_next_app",
+      "community": 3,
+      "norm_label": "create-next-app"
+    },
+    {
+      "label": "Geist Font",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": "https://vercel.com/font",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Geist",
+      "community": 3,
+      "norm_label": "geist font"
+    },
+    {
+      "label": "Vercel",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": "https://vercel.com",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Vercel",
+      "community": 3,
+      "norm_label": "vercel"
+    },
+    {
+      "label": "Tailwind CSS",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Tailwind_CSS",
+      "community": 1,
+      "norm_label": "tailwind css"
+    },
+    {
+      "label": "Supabase",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Supabase",
+      "community": 1,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "PostgreSQL",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "PostgreSQL",
+      "community": 1,
+      "norm_label": "postgresql"
+    },
+    {
+      "label": "Nodemailer",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Nodemailer",
+      "community": 1,
+      "norm_label": "nodemailer"
+    },
+    {
+      "label": "Node.js",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "Node.js",
+      "community": 1,
+      "norm_label": "node.js"
+    },
+    {
+      "label": "TaskFlow",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Full-stack project management app with WebSocket collaboration, JWT auth, and role-based access.",
+      "id": "TaskFlow",
+      "community": 0,
+      "norm_label": "taskflow"
+    },
+    {
+      "label": "Real-Time Internet Speed Monitor",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Chrome Extension with 1,000+ active installs for real-time network speed tracking.",
+      "id": "RealTime_Speed_Monitor",
+      "community": 0,
+      "norm_label": "real-time internet speed monitor"
+    },
+    {
+      "label": "MongooseNet",
+      "file_type": "code",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://www.nuget.org/packages/MongooseNet/",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "C# library for schema-flexible data handling in MongoDB.",
+      "id": "MongooseNet",
+      "community": 0,
+      "norm_label": "mongoosenet"
+    },
+    {
+      "label": "GitHub",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://github.com/aajinn",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "GitHub",
+      "community": 0,
+      "norm_label": "github"
+    },
+    {
+      "label": "LinkedIn",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://www.linkedin.com/in/ajin-varghese-chandy-1654a4276",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "LinkedIn",
+      "community": 0,
+      "norm_label": "linkedin"
+    },
+    {
+      "label": "X/Twitter",
+      "file_type": "document",
+      "source_file": "public/llms.txt",
+      "source_location": null,
+      "source_url": "https://x.com/areddev",
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "X_Twitter",
+      "community": 0,
+      "norm_label": "x/twitter"
+    },
+    {
+      "label": "node_modules/next/dist/docs/",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "node_modules_next_dist_docs",
+      "community": 2,
+      "norm_label": "node_modules/next/dist/docs/"
+    }
+  ],
+  "links": [
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "2",
+      "weight": 1.0,
+      "source": "AGENTS_md",
+      "target": "Next.js"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "AGENTS.md",
+      "source_location": "4",
+      "weight": 1.0,
+      "source": "AGENTS_md",
+      "target": "node_modules_next_dist_docs"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "CLAUDE.md",
+      "source_location": "1",
+      "weight": 1.0,
+      "source": "CLAUDE_md",
+      "target": "AGENTS_md"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "21",
+      "weight": 1.0,
+      "source": "README_md",
+      "target": "Geist"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "1",
+      "weight": 1.0,
+      "source": "README_md",
+      "target": "Next.js"
+    },
+    {
+      "relation": "cites",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "34",
+      "weight": 1.0,
+      "source": "README_md",
+      "target": "Vercel"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "1",
+      "weight": 1.0,
+      "source": "README_md",
+      "target": "create_next_app"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "1",
+      "weight": 1.0,
+      "source": "llms_txt",
+      "target": "Ajin_Varghese_Chandy"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "9",
+      "weight": 1.0,
+      "source": "llms_txt",
+      "target": "ared_dev"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "14",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "GitHub"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "15",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "LinkedIn"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "22",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "MongooseNet"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "21",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "RealTime_Speed_Monitor"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "23",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "TaskFlow"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "16",
+      "weight": 1.0,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "X_Twitter"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.9,
+      "source_file": "public/llms.txt",
+      "source_location": "1",
+      "weight": 0.9,
+      "source": "Ajin_Varghese_Chandy",
+      "target": "ared_dev"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "27",
+      "weight": 1.0,
+      "source": "ared_dev",
+      "target": "Next.js"
+    },
+    {
+      "relation": "implements",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "public/llms.txt",
+      "source_location": "31",
+      "weight": 0.85,
+      "rationale": "Self-hosted Next.js requires a Node.js server (line 31: 'Self-hosted Next.js (Node.js server)')",
+      "source": "ared_dev",
+      "target": "Node.js"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "30",
+      "weight": 1.0,
+      "source": "ared_dev",
+      "target": "Nodemailer"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "29",
+      "weight": 1.0,
+      "source": "ared_dev",
+      "target": "PostgreSQL"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "29",
+      "weight": 1.0,
+      "source": "ared_dev",
+      "target": "Supabase"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt",
+      "source_location": "28",
+      "weight": 1.0,
+      "source": "ared_dev",
+      "target": "Tailwind_CSS"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "ared_tech_stack",
+      "label": "ared.dev Tech Stack",
+      "nodes": [
+        "ared_dev",
+        "Next.js",
+        "Tailwind_CSS",
+        "Supabase",
+        "PostgreSQL",
+        "Nodemailer",
+        "Node.js"
+      ],
+      "relation": "implement",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt"
+    },
+    {
+      "id": "ajin_projects",
+      "label": "Ajin Varghese Chandy Projects",
+      "nodes": [
+        "Ajin_Varghese_Chandy",
+        "TaskFlow",
+        "RealTime_Speed_Monitor",
+        "MongooseNet"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "public/llms.txt"
+    }
+  ],
+  "built_at_commit": "ffc3e764d78a735a0049296b0f04bfdc3bcb4828"
+}
