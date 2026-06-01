@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>graphify - graphify-out/graph.html</title>
+<script src="https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        integrity="sha384-Ux6phic9PEHJ38YtrijhkzyJ8yQlH8i/+buBR8s3mAZOJrP1gwyvAcIYl3GWtpX1"
+        crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 280px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 140px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 140px; }
+  #info-panel h3 { font-size: 13px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.6; }
+  #info-content .field { margin-bottom: 5px; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  #neighbors-list { max-height: 160px; overflow-y: auto; margin-top: 4px; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 13px; color: #aaa; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; border-radius: 4px; font-size: 12px; }
+  .legend-item:hover { background: #2a2a4e; padding-left: 4px; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .legend-count { color: #666; font-size: 11px; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+  #legend-controls { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 4px 0; }
+  #legend-controls label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaa; user-select: none; }
+  #legend-controls label:hover { color: #e0e0e0; }
+  .legend-cb, #select-all-cb { appearance: none; -webkit-appearance: none; width: 14px; height: 14px; border: 1.5px solid #3a3a5e; border-radius: 3px; background: #0f0f1a; cursor: pointer; position: relative; flex-shrink: 0; }
+  .legend-cb:checked, #select-all-cb:checked { background: #4E79A7; border-color: #4E79A7; }
+  .legend-cb:checked::after, #select-all-cb:checked::after { content: ''; position: absolute; left: 3.5px; top: 1px; width: 4px; height: 7px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  #select-all-cb:indeterminate { background: #4E79A7; border-color: #4E79A7; }
+  #select-all-cb:indeterminate::after { content: ''; position: absolute; left: 2px; top: 5px; width: 8px; height: 2px; background: #fff; border: none; transform: none; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Search nodes..." autocomplete="off">
+    <div id="search-results"></div>
+  </div>
+  <div id="info-panel">
+    <h3>Node Info</h3>
+    <div id="info-content"><span class="empty">Click a node to inspect it</span></div>
+  </div>
+  <div id="legend-wrap">
+    <h3>Communities</h3>
+    <div id="legend-controls">
+      <label><input type="checkbox" id="select-all-cb" checked onchange="toggleAllCommunities(!this.checked)">Select All</label>
+    </div>
+    <div id="legend"></div>
+  </div>
+  <div id="stats">58 nodes &middot; 22 edges &middot; 40 communities</div>
+</div>
+<script>
+const RAW_NODES = [{"id": "app_layout_rootlayout", "label": "RootLayout", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "RootLayout", "community": 4, "community_name": "Root Layout Component", "source_file": "app/layout.tsx", "file_type": "code", "degree": 0}, {"id": "contact_route_post", "label": "POST", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "POST", "community": 5, "community_name": "Contact API Route", "source_file": "app/api/contact/route.ts", "file_type": "code", "degree": 0}, {"id": "content_route_get", "label": "GET", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "GET", "community": 6, "community_name": "Content API GET", "source_file": "app/api/content/route.ts", "file_type": "code", "degree": 0}, {"id": "content_route_put", "label": "PUT", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "PUT", "community": 7, "community_name": "Content API PUT", "source_file": "app/api/content/route.ts", "file_type": "code", "degree": 0}, {"id": "storage_route_get", "label": "GET", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "GET", "community": 8, "community_name": "Storage API GET", "source_file": "app/api/storage/route.ts", "file_type": "code", "degree": 0}, {"id": "storage_route_post", "label": "POST", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "POST", "community": 9, "community_name": "Storage API POST", "source_file": "app/api/storage/route.ts", "file_type": "code", "degree": 0}, {"id": "storage_route_delete", "label": "DELETE", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "DELETE", "community": 10, "community_name": "Storage API DELETE", "source_file": "app/api/storage/route.ts", "file_type": "code", "degree": 0}, {"id": "components_contactform_contactform", "label": "ContactForm", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ContactForm", "community": 11, "community_name": "ContactForm Component", "source_file": "app/components/ContactForm.tsx", "file_type": "code", "degree": 0}, {"id": "components_hiremebutton_hiremebutton", "label": "HireMeButton", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "HireMeButton", "community": 12, "community_name": "HireMeButton Component", "source_file": "app/components/HireMeButton.tsx", "file_type": "code", "degree": 0}, {"id": "components_markdowncontent_markdowncontent", "label": "MarkdownContent", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "MarkdownContent", "community": 13, "community_name": "MarkdownContent Component", "source_file": "app/components/MarkdownContent.tsx", "file_type": "code", "degree": 0}, {"id": "components_reviewscroll_reviewscroll", "label": "ReviewScroll", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ReviewScroll", "community": 14, "community_name": "ReviewScroll Component", "source_file": "app/components/ReviewScroll.tsx", "file_type": "code", "degree": 0}, {"id": "lib_content_skillcategory", "label": "SkillCategory", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "SkillCategory", "community": 15, "community_name": "SkillCategory Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_experienceitem", "label": "ExperienceItem", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ExperienceItem", "community": 16, "community_name": "ExperienceItem Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_experience", "label": "Experience", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Experience", "community": 17, "community_name": "Experience Content", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_projectitem", "label": "ProjectItem", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ProjectItem", "community": 18, "community_name": "ProjectItem Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_project", "label": "Project", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Project", "community": 19, "community_name": "Project Content", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_hero", "label": "Hero", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Hero", "community": 20, "community_name": "Hero Section", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_social", "label": "Social", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Social", "community": 21, "community_name": "Social Links", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_email", "label": "Email", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Email", "community": 22, "community_name": "Email Config", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_review", "label": "Review", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Review", "community": 23, "community_name": "Review Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_footer", "label": "Footer", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Footer", "community": 24, "community_name": "Footer Section", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_themeconfig", "label": "ThemeConfig", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "ThemeConfig", "community": 25, "community_name": "Theme Config", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_page", "label": "Page", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Page", "community": 26, "community_name": "Page Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_sectionconfig", "label": "SectionConfig", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "SectionConfig", "community": 27, "community_name": "Section Config", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_layoutconfig", "label": "LayoutConfig", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "LayoutConfig", "community": 28, "community_name": "Layout Config", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_sitecontent", "label": "SiteContent", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "SiteContent", "community": 29, "community_name": "Site Content Type", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_content_getdefaultcontent", "label": "getDefaultContent", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getDefaultContent", "community": 30, "community_name": "Default Content Initializer", "source_file": "lib/content.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_getallcontent", "label": "getAllContent", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getAllContent", "community": 31, "community_name": "Data GetAllContent", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_getcontentsection", "label": "getContentSection", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getContentSection", "community": 32, "community_name": "Data GetContentSection", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_gettheme", "label": "getTheme", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getTheme", "community": 33, "community_name": "Data GetTheme", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_getlayout", "label": "getLayout", "color": {"background": "#59A14F", "border": "#59A14F", "highlight": {"background": "#ffffff", "border": "#59A14F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getLayout", "community": 34, "community_name": "Data GetLayout", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_getpages", "label": "getPages", "color": {"background": "#EDC948", "border": "#EDC948", "highlight": {"background": "#ffffff", "border": "#EDC948"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getPages", "community": 35, "community_name": "Data GetPages", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_data_updatecontent", "label": "updateContent", "color": {"background": "#B07AA1", "border": "#B07AA1", "highlight": {"background": "#ffffff", "border": "#B07AA1"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "updateContent", "community": 36, "community_name": "Data UpdateContent", "source_file": "lib/data.ts", "file_type": "code", "degree": 0}, {"id": "lib_supabase_getpublicclient", "label": "getPublicClient", "color": {"background": "#FF9DA7", "border": "#FF9DA7", "highlight": {"background": "#ffffff", "border": "#FF9DA7"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getPublicClient", "community": 37, "community_name": "Supabase Public Client", "source_file": "lib/supabase.ts", "file_type": "code", "degree": 0}, {"id": "lib_supabase_getadminclient", "label": "getAdminClient", "color": {"background": "#9C755F", "border": "#9C755F", "highlight": {"background": "#ffffff", "border": "#9C755F"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "getAdminClient", "community": 38, "community_name": "Supabase Admin Client", "source_file": "lib/supabase.ts", "file_type": "code", "degree": 0}, {"id": "AGENTS_md", "label": "AGENTS.md", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "AGENTS.md", "community": 2, "community_name": "Dev Setup & Agent Rules", "source_file": "AGENTS.md", "file_type": "document", "degree": 3}, {"id": "CLAUDE_md", "label": "CLAUDE.md", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "CLAUDE.md", "community": 2, "community_name": "Dev Setup & Agent Rules", "source_file": "CLAUDE.md", "file_type": "document", "degree": 1}, {"id": "README_md", "label": "README.md", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 25.0, "font": {"size": 12, "color": "#ffffff"}, "title": "README.md", "community": 3, "community_name": "App Foundation & Framework", "source_file": "README.md", "file_type": "document", "degree": 4}, {"id": "google_verify_html", "label": "Google Site Verification", "color": {"background": "#BAB0AC", "border": "#BAB0AC", "highlight": {"background": "#ffffff", "border": "#BAB0AC"}}, "size": 10.0, "font": {"size": 0, "color": "#ffffff"}, "title": "Google Site Verification", "community": 39, "community_name": "Google Verification File", "source_file": "public/google5c8c2726fea42634.html", "file_type": "document", "degree": 0}, {"id": "llms_txt", "label": "llms.txt", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 17.5, "font": {"size": 12, "color": "#ffffff"}, "title": "llms.txt", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "document", "degree": 2}, {"id": "Ajin_Varghese_Chandy", "label": "Ajin Varghese Chandy", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "Ajin Varghese Chandy", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "document", "degree": 8}, {"id": "ared_dev", "label": "ared.dev Portfolio", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 40.0, "font": {"size": 12, "color": "#ffffff"}, "title": "ared.dev Portfolio", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "document", "degree": 8}, {"id": "Next.js", "label": "Next.js", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 21.2, "font": {"size": 12, "color": "#ffffff"}, "title": "Next.js", "community": 2, "community_name": "Dev Setup & Agent Rules", "source_file": "AGENTS.md", "file_type": "code", "degree": 3}, {"id": "create_next_app", "label": "create-next-app", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "create-next-app", "community": 3, "community_name": "App Foundation & Framework", "source_file": "README.md", "file_type": "code", "degree": 1}, {"id": "Geist", "label": "Geist Font", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Geist Font", "community": 3, "community_name": "App Foundation & Framework", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "Vercel", "label": "Vercel", "color": {"background": "#76B7B2", "border": "#76B7B2", "highlight": {"background": "#ffffff", "border": "#76B7B2"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Vercel", "community": 3, "community_name": "App Foundation & Framework", "source_file": "README.md", "file_type": "document", "degree": 1}, {"id": "Tailwind_CSS", "label": "Tailwind CSS", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Tailwind CSS", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "Supabase", "label": "Supabase", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Supabase", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "PostgreSQL", "label": "PostgreSQL", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "PostgreSQL", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "Nodemailer", "label": "Nodemailer", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Nodemailer", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "Node.js", "label": "Node.js", "color": {"background": "#F28E2B", "border": "#F28E2B", "highlight": {"background": "#ffffff", "border": "#F28E2B"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Node.js", "community": 1, "community_name": "Tech Stack & Portfolio Site", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "TaskFlow", "label": "TaskFlow", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "TaskFlow", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "RealTime_Speed_Monitor", "label": "Real-Time Internet Speed Monitor", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "Real-Time Internet Speed Monitor", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "MongooseNet", "label": "MongooseNet", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "MongooseNet", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "code", "degree": 1}, {"id": "GitHub", "label": "GitHub", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "GitHub", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "document", "degree": 1}, {"id": "LinkedIn", "label": "LinkedIn", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "LinkedIn", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "document", "degree": 1}, {"id": "X_Twitter", "label": "X/Twitter", "color": {"background": "#4E79A7", "border": "#4E79A7", "highlight": {"background": "#ffffff", "border": "#4E79A7"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "X/Twitter", "community": 0, "community_name": "Personal Profile & Projects", "source_file": "public/llms.txt", "file_type": "document", "degree": 1}, {"id": "node_modules_next_dist_docs", "label": "node_modules/next/dist/docs/", "color": {"background": "#E15759", "border": "#E15759", "highlight": {"background": "#ffffff", "border": "#E15759"}}, "size": 13.8, "font": {"size": 0, "color": "#ffffff"}, "title": "node_modules/next/dist/docs/", "community": 2, "community_name": "Dev Setup & Agent Rules", "source_file": "AGENTS.md", "file_type": "document", "degree": 1}];
+const RAW_EDGES = [{"from": "AGENTS_md", "to": "Next.js", "label": "cites", "title": "cites [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "AGENTS_md", "to": "node_modules_next_dist_docs", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "CLAUDE_md", "to": "AGENTS_md", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "README_md", "to": "Geist", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "README_md", "to": "Next.js", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "README_md", "to": "Vercel", "label": "cites", "title": "cites [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "README_md", "to": "create_next_app", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "llms_txt", "to": "Ajin_Varghese_Chandy", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "llms_txt", "to": "ared_dev", "label": "references", "title": "references [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "GitHub", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "LinkedIn", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "MongooseNet", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "RealTime_Speed_Monitor", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "TaskFlow", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "X_Twitter", "label": "conceptually_related_to", "title": "conceptually_related_to [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "Ajin_Varghese_Chandy", "to": "ared_dev", "label": "conceptually_related_to", "title": "conceptually_related_to [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "ared_dev", "to": "Next.js", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ared_dev", "to": "Node.js", "label": "implements", "title": "implements [INFERRED]", "dashes": true, "width": 1, "color": {"opacity": 0.35}, "confidence": "INFERRED"}, {"from": "ared_dev", "to": "Nodemailer", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ared_dev", "to": "PostgreSQL", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ared_dev", "to": "Supabase", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}, {"from": "ared_dev", "to": "Tailwind_CSS", "label": "implements", "title": "implements [EXTRACTED]", "dashes": false, "width": 2, "color": {"opacity": 0.7}, "confidence": "EXTRACTED"}];
+const LEGEND = [{"cid": 0, "color": "#4E79A7", "label": "Personal Profile &amp; Projects", "count": 7}, {"cid": 1, "color": "#F28E2B", "label": "Tech Stack &amp; Portfolio Site", "count": 7}, {"cid": 2, "color": "#E15759", "label": "Dev Setup &amp; Agent Rules", "count": 4}, {"cid": 3, "color": "#76B7B2", "label": "App Foundation &amp; Framework", "count": 4}, {"cid": 4, "color": "#59A14F", "label": "Root Layout Component", "count": 1}, {"cid": 5, "color": "#EDC948", "label": "Contact API Route", "count": 1}, {"cid": 6, "color": "#B07AA1", "label": "Content API GET", "count": 1}, {"cid": 7, "color": "#FF9DA7", "label": "Content API PUT", "count": 1}, {"cid": 8, "color": "#9C755F", "label": "Storage API GET", "count": 1}, {"cid": 9, "color": "#BAB0AC", "label": "Storage API POST", "count": 1}, {"cid": 10, "color": "#4E79A7", "label": "Storage API DELETE", "count": 1}, {"cid": 11, "color": "#F28E2B", "label": "ContactForm Component", "count": 1}, {"cid": 12, "color": "#E15759", "label": "HireMeButton Component", "count": 1}, {"cid": 13, "color": "#76B7B2", "label": "MarkdownContent Component", "count": 1}, {"cid": 14, "color": "#59A14F", "label": "ReviewScroll Component", "count": 1}, {"cid": 15, "color": "#EDC948", "label": "SkillCategory Type", "count": 1}, {"cid": 16, "color": "#B07AA1", "label": "ExperienceItem Type", "count": 1}, {"cid": 17, "color": "#FF9DA7", "label": "Experience Content", "count": 1}, {"cid": 18, "color": "#9C755F", "label": "ProjectItem Type", "count": 1}, {"cid": 19, "color": "#BAB0AC", "label": "Project Content", "count": 1}, {"cid": 20, "color": "#4E79A7", "label": "Hero Section", "count": 1}, {"cid": 21, "color": "#F28E2B", "label": "Social Links", "count": 1}, {"cid": 22, "color": "#E15759", "label": "Email Config", "count": 1}, {"cid": 23, "color": "#76B7B2", "label": "Review Type", "count": 1}, {"cid": 24, "color": "#59A14F", "label": "Footer Section", "count": 1}, {"cid": 25, "color": "#EDC948", "label": "Theme Config", "count": 1}, {"cid": 26, "color": "#B07AA1", "label": "Page Type", "count": 1}, {"cid": 27, "color": "#FF9DA7", "label": "Section Config", "count": 1}, {"cid": 28, "color": "#9C755F", "label": "Layout Config", "count": 1}, {"cid": 29, "color": "#BAB0AC", "label": "Site Content Type", "count": 1}, {"cid": 30, "color": "#4E79A7", "label": "Default Content Initializer", "count": 1}, {"cid": 31, "color": "#F28E2B", "label": "Data GetAllContent", "count": 1}, {"cid": 32, "color": "#E15759", "label": "Data GetContentSection", "count": 1}, {"cid": 33, "color": "#76B7B2", "label": "Data GetTheme", "count": 1}, {"cid": 34, "color": "#59A14F", "label": "Data GetLayout", "count": 1}, {"cid": 35, "color": "#EDC948", "label": "Data GetPages", "count": 1}, {"cid": 36, "color": "#B07AA1", "label": "Data UpdateContent", "count": 1}, {"cid": 37, "color": "#FF9DA7", "label": "Supabase Public Client", "count": 1}, {"cid": 38, "color": "#9C755F", "label": "Supabase Admin Client", "count": 1}, {"cid": 39, "color": "#BAB0AC", "label": "Google Verification File", "count": 1}];
+
+// HTML-escape helper — prevents XSS when injecting graph data into innerHTML
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// Build vis datasets
+const nodesDS = new vis.DataSet(RAW_NODES.map(n => ({
+  id: n.id, label: n.label, color: n.color, size: n.size,
+  font: n.font, title: n.title,
+  _community: n.community, _community_name: n.community_name,
+  _source_file: n.source_file, _file_type: n.file_type, _degree: n.degree,
+})));
+
+const edgesDS = new vis.DataSet(RAW_EDGES.map((e, i) => ({
+  id: i, from: e.from, to: e.to,
+  label: '',
+  title: e.title,
+  dashes: e.dashes,
+  width: e.width,
+  color: e.color,
+  arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+})));
+
+const container = document.getElementById('graph');
+const network = new vis.Network(container, { nodes: nodesDS, edges: edgesDS }, {
+  physics: {
+    enabled: true,
+    solver: 'forceAtlas2Based',
+    forceAtlas2Based: {
+      gravitationalConstant: -60,
+      centralGravity: 0.005,
+      springLength: 120,
+      springConstant: 0.08,
+      damping: 0.4,
+      avoidOverlap: 0.8,
+    },
+    stabilization: { iterations: 200, fit: true },
+  },
+  interaction: {
+    hover: true,
+    tooltipDelay: 100,
+    hideEdgesOnDrag: true,
+    navigationButtons: false,
+    keyboard: false,
+  },
+  nodes: { shape: 'dot', borderWidth: 1.5 },
+  edges: { smooth: { type: 'continuous', roundness: 0.2 }, selectionWidth: 3 },
+});
+
+network.once('stabilizationIterationsDone', () => {
+  network.setOptions({ physics: { enabled: false } });
+});
+
+function showInfo(nodeId) {
+  const n = nodesDS.get(nodeId);
+  if (!n) return;
+  const neighborIds = network.getConnectedNodes(nodeId);
+  const neighborItems = neighborIds.map(nid => {
+    const nb = nodesDS.get(nid);
+    const color = nb ? nb.color.background : '#555';
+    return `<span class="neighbor-link" style="border-left-color:${esc(color)}" onclick="focusNode(${JSON.stringify(nid)})">${esc(nb ? nb.label : nid)}</span>`;
+  }).join('');
+  document.getElementById('info-content').innerHTML = `
+    <div class="field"><b>${esc(n.label)}</b></div>
+    <div class="field">Type: ${esc(n._file_type || 'unknown')}</div>
+    <div class="field">Community: ${esc(n._community_name)}</div>
+    <div class="field">Source: ${esc(n._source_file || '-')}</div>
+    <div class="field">Degree: ${n._degree}</div>
+    ${neighborIds.length ? `<div class="field" style="margin-top:8px;color:#aaa;font-size:11px">Neighbors (${neighborIds.length})</div><div id="neighbors-list">${neighborItems}</div>` : ''}
+  `;
+}
+
+function focusNode(nodeId) {
+  network.focus(nodeId, { scale: 1.4, animation: true });
+  network.selectNodes([nodeId]);
+  showInfo(nodeId);
+}
+
+// Track hovered node — hover detection is more reliable than click params
+let hoveredNodeId = null;
+network.on('hoverNode', params => {
+  hoveredNodeId = params.node;
+  container.style.cursor = 'pointer';
+});
+network.on('blurNode', () => {
+  hoveredNodeId = null;
+  container.style.cursor = 'default';
+});
+container.addEventListener('click', () => {
+  if (hoveredNodeId !== null) {
+    showInfo(hoveredNodeId);
+    network.selectNodes([hoveredNodeId]);
+  }
+});
+network.on('click', params => {
+  if (params.nodes.length > 0) {
+    showInfo(params.nodes[0]);
+  } else if (hoveredNodeId === null) {
+    document.getElementById('info-content').innerHTML = '<span class="empty">Click a node to inspect it</span>';
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchResults = document.getElementById('search-results');
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  searchResults.innerHTML = '';
+  if (!q) { searchResults.style.display = 'none'; return; }
+  const matches = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 20);
+  if (!matches.length) { searchResults.style.display = 'none'; return; }
+  searchResults.style.display = 'block';
+  matches.forEach(n => {
+    const el = document.createElement('div');
+    el.className = 'search-item';
+    el.textContent = n.label;
+    el.style.borderLeft = `3px solid ${n.color.background}`;
+    el.style.paddingLeft = '8px';
+    el.onclick = () => {
+      network.focus(n.id, { scale: 1.5, animation: true });
+      network.selectNodes([n.id]);
+      showInfo(n.id);
+      searchResults.style.display = 'none';
+      searchInput.value = '';
+    };
+    searchResults.appendChild(el);
+  });
+});
+document.addEventListener('click', e => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput)
+    searchResults.style.display = 'none';
+});
+
+const hiddenCommunities = new Set();
+
+const selectAllCb = document.getElementById('select-all-cb');
+
+function updateSelectAllState() {
+  const total = LEGEND.length;
+  const hidden = hiddenCommunities.size;
+  selectAllCb.checked = hidden === 0;
+  selectAllCb.indeterminate = hidden > 0 && hidden < total;
+}
+
+function toggleAllCommunities(hide) {
+  document.querySelectorAll('.legend-item').forEach(item => {
+    hide ? item.classList.add('dimmed') : item.classList.remove('dimmed');
+  });
+  document.querySelectorAll('.legend-cb').forEach(cb => {
+    cb.checked = !hide;
+  });
+  LEGEND.forEach(c => {
+    if (hide) hiddenCommunities.add(c.cid); else hiddenCommunities.delete(c.cid);
+  });
+  const updates = RAW_NODES.map(n => ({ id: n.id, hidden: hide }));
+  nodesDS.update(updates);
+  updateSelectAllState();
+}
+
+const legendEl = document.getElementById('legend');
+LEGEND.forEach(c => {
+  const item = document.createElement('div');
+  item.className = 'legend-item';
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.className = 'legend-cb';
+  cb.checked = true;
+  cb.addEventListener('change', (e) => {
+    e.stopPropagation();
+    if (cb.checked) {
+      hiddenCommunities.delete(c.cid);
+      item.classList.remove('dimmed');
+    } else {
+      hiddenCommunities.add(c.cid);
+      item.classList.add('dimmed');
+    }
+    const updates = RAW_NODES
+      .filter(n => n.community === c.cid)
+      .map(n => ({ id: n.id, hidden: !cb.checked }));
+    nodesDS.update(updates);
+    updateSelectAllState();
+  });
+  item.innerHTML = `<div class="legend-dot" style="background:${c.color}"></div>
+    <span class="legend-label">${c.label}</span>
+    <span class="legend-count">${c.count}</span>`;
+  item.prepend(cb);
+  item.onclick = (e) => {
+    if (e.target === cb) return;
+    cb.checked = !cb.checked;
+    cb.dispatchEvent(new Event('change'));
+  };
+  legendEl.appendChild(item);
+});
+</script>
+<script>
+// Render hyperedges as shaded regions
+const hyperedges = [{"id": "ared_tech_stack", "label": "ared.dev Tech Stack", "nodes": ["ared_dev", "Next.js", "Tailwind_CSS", "Supabase", "PostgreSQL", "Nodemailer", "Node.js"], "relation": "implement", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "public/llms.txt"}, {"id": "ajin_projects", "label": "Ajin Varghese Chandy Projects", "nodes": ["Ajin_Varghese_Chandy", "TaskFlow", "RealTime_Speed_Monitor", "MongooseNet"], "relation": "form", "confidence": "EXTRACTED", "confidence_score": 1.0, "source_file": "public/llms.txt"}];
+// afterDrawing passes ctx already transformed to network coordinate space.
+// Draw node positions raw — no manual pan/zoom/DPR math needed.
+network.on('afterDrawing', function(ctx) {
+    hyperedges.forEach(h => {
+        const positions = h.nodes
+            .map(nid => network.getPositions([nid])[nid])
+            .filter(p => p !== undefined);
+        if (positions.length < 2) return;
+        ctx.save();
+        ctx.globalAlpha = 0.12;
+        ctx.fillStyle = '#6366f1';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Centroid and expanded hull in network coordinates
+        const cx = positions.reduce((s, p) => s + p.x, 0) / positions.length;
+        const cy = positions.reduce((s, p) => s + p.y, 0) / positions.length;
+        const expanded = positions.map(p => ({
+            x: cx + (p.x - cx) * 1.15,
+            y: cy + (p.y - cy) * 1.15
+        }));
+        ctx.moveTo(expanded[0].x, expanded[0].y);
+        expanded.slice(1).forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.closePath();
+        ctx.fill();
+        ctx.globalAlpha = 0.4;
+        ctx.stroke();
+        // Label
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = '#4f46e5';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(h.label, cx, cy - 5);
+        ctx.restore();
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+export type SkillCategory = {
+  category: string;
+  items: string[];
+};
+
+export type ExperienceItem = {
+  label: string;
+  url?: string;
+  github?: string;
+  detail: string;
+};
+
+export type Experience = {
+  role: string;
+  period: string;
+  description: string;
+  items: ExperienceItem[];
+};
+
+export type ProjectItem = {
+  label: string;
+  detail: string;
+};
+
+export type Project = {
+  title: string;
+  period: string;
+  items: ProjectItem[];
+};
+
+export type Hero = {
+  name: string;
+  subtitle: string;
+  description: string;
+  tags: string[];
+  hireButton?: {
+    visible: boolean;
+    label: string;
+  };
+};
+
+export type Social = {
+  github: string;
+  linkedin: string;
+  x: string;
+};
+
+export type Email = {
+  to: string;
+  subject: string;
+  body: string;
+};
+
+export type Review = {
+  author: string;
+  rating: number;
+  date: string;
+  text: string;
+  helpful?: number;
+  isDeveloper?: boolean;
+};
+
+export type Footer = {
+  text: string;
+};
+
+export type ThemeConfig = {
+  mode: "dark" | "light";
+  background: string;
+  surface: string;
+  surfaceAlt: string;
+  border: string;
+  textPrimary: string;
+  textSecondary: string;
+  textMuted: string;
+  accent: string;
+  accentHover: string;
+  primary: string;
+  fontFamily?: string;
+  borderRadius?: string;
+  shadow?: string;
+  transition?: string;
+};
+
+export type Page = {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type SectionConfig = {
+  key: string;
+  label: string;
+  visible: boolean;
+  content?: string;
+};
+
+export type LayoutConfig = {
+  sections: SectionConfig[];
+};
+
+export type SiteContent = {
+  skills: SkillCategory[];
+  experience: Experience;
+  projects: Project[];
+  hero: Hero;
+  social: Social;
+  email: Email;
+  footer: Footer;
+  reviews: Review[];
+  theme: ThemeConfig;
+  pages: Page[];
+  layout: LayoutConfig;
+};
+
+export function getDefaultContent(): SiteContent {
+  return {
+    skills: [
+      { category: "Languages", items: ["JavaScript", "Python", "HTML", "CSS"] },
+      { category: "Frontend", items: ["React.js", "Next.js", "Tailwind CSS"] },
+      { category: "Backend", items: ["Node.js", "Express.js"] },
+      { category: "Databases", items: ["MongoDB", "PostgreSQL"] },
+    ],
+    experience: {
+      role: "Independent Software Developer",
+      period: "2024 – Present",
+      description:
+        "Projects shipped independently, demonstrating full ownership and public deployment.",
+      items: [
+        {
+          label: "Real-Time Internet Speed Monitor",
+          url: "https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl",
+          github: "https://github.com/aajinn/real-time-internet-speed",
+          detail:
+            "Chrome Extension — Engineered and published a performant tool now at 1,000+ active installs.",
+        },
+        {
+          label: "MongooseNet NuGet Package",
+          url: "https://www.nuget.org/packages/MongooseNet/",
+          github: "https://github.com/aajinn/MongooseNet",
+          detail:
+            "Authored and published a reusable C# library for schema‑flexible data handling in MongoDB.",
+        },
+      ],
+    },
+    projects: [
+      {
+        title: "TaskFlow – Full-Stack Project Management App",
+        period: "2026",
+        items: [
+          {
+            label: "Scalable Architecture",
+            detail:
+              "Next.js (React) frontend and Express.js Node.js backend, using modular service-based backend architecture.",
+          },
+          {
+            label: "Real-Time Collaboration",
+            detail:
+              "WebSockets eliminating manual page refreshes for collaborative teams.",
+          },
+          {
+            label: "Auth & Access Control",
+            detail:
+              "JWT authentication and role‑based access (Admin/Member) to secure multi‑user workspaces.",
+          },
+          {
+            label: "Polished UI/UX",
+            detail:
+              "Mobile‑first, responsive design with Tailwind CSS, skeleton loaders, and optimistic UI updates.",
+          },
+        ],
+      },
+    ],
+    hero: {
+      name: "Ajin Varghese Chandy",
+      subtitle: "Full Stack Product Builder",
+      description:
+        "Building scalable web products focused on automation, real-time systems, and AI integrations.",
+      tags: [
+        "REST APIs",
+        "Auth & JWT",
+        "Rate Limiting",
+        "Payment Integration",
+        "Real-time Systems",
+        "Database Design",
+        "CI/CD",
+        "Chrome Extensions",
+        "AI Integration",
+        "Async Programming",
+        "Web Performance",
+        "Automation",
+      ],
+      hireButton: { visible: true, label: "Hire Me" },
+    },
+    social: {
+      github: "https://github.com/aajinn",
+      linkedin: "https://www.linkedin.com/in/ajin-varghese-chandy-1654a4276",
+      x: "https://x.com/areddev",
+    },
+    email: {
+      to: "careerajin@gmail.com",
+      subject: "Opportunity%20for%20Ajin%20Varghese%20Chandy",
+      body: "Hi%20Ajin%2C%0A%0AI%20came%20across%20your%20portfolio%20and%20I%20am%20interested%20in%20discussing%20a%20potential%20opportunity%20with%20you.%0A%0ARole%3A%20%5BJob%20Title%5D%0ACompany%3A%20%5BCompany%20Name%5D%0ALocation%3A%20%5BRemote%20%2F%20On-site%20%2F%20Hybrid%5D%0A%0AHere%20is%20a%20brief%20overview%20of%20what%20we%20are%20looking%20for%3A%0A%5BDescribe%20the%20role%20and%20requirements%5D%0A%0ALooking%20forward%20to%20hearing%20from%20you.%0A%0ABest%20regards%2C%0A%5BYour%20Name%5D%0A%5BYour%20Company%5D%0A%5BYour%20Contact%5D",
+    },
+    footer: {
+      text: "Ajin Varghese Chandy · Full Stack Product Builder",
+    },
+    reviews: [
+      { author: "Scott Andrew", rating: 5, date: "4 Feb 2026", text: "My internet is too slow to be sure its really useful.", helpful: 2 },
+      { author: "ปรีชา รุ่งรัศมีธรรม", rating: 4, date: "18 Jan 2026", text: "good", helpful: 1 },
+      { author: "Creative World!", rating: 5, date: "5 Jan 2026", text: "not bad ." },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "5 Jan 2026", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "विधासागर कुमार", rating: 4, date: "28 Dec 2025", text: "thanks so much" },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "5 Jan 2026", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "Casion Yu", rating: 5, date: "24 Dec 2025", text: "great design", helpful: 1 },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "24 Dec 2025", text: "Thanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+      { author: "Mohan Krishna Upputuri", rating: 5, date: "10 Oct 2025", text: "Helps a lot with realtime tracking", helpful: 1 },
+      { author: "Ajin Varghese Chandy (Developer)", rating: 5, date: "10 Oct 2025", text: "Glad to hear it's helping! Thanks for the feedback 🙌\n\nWe just rolled out version 3.2.1. (soon hit production)\n\nThanks again for using it — your feedback is super helpful as we continue improving!", isDeveloper: true },
+    ],
+    theme: {
+      mode: "dark",
+      background: "#0a0a0f",
+      surface: "#0e0e16",
+      surfaceAlt: "#1a1a2e",
+      border: "#1e1e2e",
+      textPrimary: "#e8e8f0",
+      textSecondary: "#7070a0",
+      textMuted: "#555570",
+      accent: "#6060a0",
+      accentHover: "#8080c0",
+      primary: "#ffffff",
+      fontFamily: "Inter, system-ui, sans-serif",
+      borderRadius: "12px",
+      shadow: "0 4px 24px rgba(0,0,0,0.3)",
+      transition: "0.2s",
+    },
+    pages: [],
+    layout: {
+      sections: [
+        { key: "hero", label: "Hero", visible: true },
+        { key: "reviews", label: "Reviews", visible: true },
+        { key: "skills", label: "Skills", visible: true },
+        { key: "experience", label: "Experience", visible: true },
+        { key: "projects", label: "Projects", visible: true },
+        { key: "contact", label: "Contact", visible: true },
+        { key: "footer", label: "Footer", visible: true },
+      ],
+    },
+  };
+}

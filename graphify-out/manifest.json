@@ -1,0 +1,177 @@
+{
+  "C:\\Projects\\ared.dev\\eslint.config.mjs": {
+    "mtime": 1774239302.7298465,
+    "ast_hash": "dfa1f5f6a7037bf39dc510f30b180002",
+    "semantic_hash": "dfa1f5f6a7037bf39dc510f30b180002"
+  },
+  "C:\\Projects\\ared.dev\\next.config.ts": {
+    "mtime": 1780141636.5457642,
+    "ast_hash": "70cd35ab9b13a90589df08d490d3e312",
+    "semantic_hash": "70cd35ab9b13a90589df08d490d3e312"
+  },
+  "C:\\Projects\\ared.dev\\package.json": {
+    "mtime": 1780121728.7570925,
+    "ast_hash": "13296832f8e722406c8d8579bc07e0ba",
+    "semantic_hash": "13296832f8e722406c8d8579bc07e0ba"
+  },
+  "C:\\Projects\\ared.dev\\postcss.config.mjs": {
+    "mtime": 1774239302.75891,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "C:\\Projects\\ared.dev\\tsconfig.json": {
+    "mtime": 1774773459.087083,
+    "ast_hash": "02fc19ad21338c2ab820a70136310db4",
+    "semantic_hash": "02fc19ad21338c2ab820a70136310db4"
+  },
+  "C:\\Projects\\ared.dev\\.opencode\\opencode.json": {
+    "mtime": 1780203298.4438787,
+    "ast_hash": "1efe24ecf938911d4f23e4b1c6ec91f7",
+    "semantic_hash": "1efe24ecf938911d4f23e4b1c6ec91f7"
+  },
+  "C:\\Projects\\ared.dev\\.opencode\\package.json": {
+    "mtime": 1780203323.8839722,
+    "ast_hash": "d3ab821609ec487b22aa5b0027f5f400",
+    "semantic_hash": "d3ab821609ec487b22aa5b0027f5f400"
+  },
+  "C:\\Projects\\ared.dev\\.opencode\\plugins\\graphify.js": {
+    "mtime": 1780203235.278339,
+    "ast_hash": "32b67963417a30cb80544e0b2a56a98d",
+    "semantic_hash": "32b67963417a30cb80544e0b2a56a98d"
+  },
+  "C:\\Projects\\ared.dev\\.vscode\\settings.json": {
+    "mtime": 1778780440.0187118,
+    "ast_hash": "73792b9af3fc811b105441cc773526b1",
+    "semantic_hash": "73792b9af3fc811b105441cc773526b1"
+  },
+  "C:\\Projects\\ared.dev\\app\\layout.tsx": {
+    "mtime": 1780141830.000395,
+    "ast_hash": "07e3d2e50d26da67dae415c69c604bb8",
+    "semantic_hash": "07e3d2e50d26da67dae415c69c604bb8"
+  },
+  "C:\\Projects\\ared.dev\\app\\page.tsx": {
+    "mtime": 1780202362.6147192,
+    "ast_hash": "90ad4ae5a611fa33f724c137c1eb56ee",
+    "semantic_hash": "90ad4ae5a611fa33f724c137c1eb56ee"
+  },
+  "C:\\Projects\\ared.dev\\app\\admin\\page.tsx": {
+    "mtime": 1780202362.6051936,
+    "ast_hash": "b6da72317a53be6eecc7de6df9019b01",
+    "semantic_hash": "b6da72317a53be6eecc7de6df9019b01"
+  },
+  "C:\\Projects\\ared.dev\\app\\api\\contact\\route.ts": {
+    "mtime": 1779431203.6511075,
+    "ast_hash": "cf53d37b0b0c5af4726146e0becf5f7f",
+    "semantic_hash": "cf53d37b0b0c5af4726146e0becf5f7f"
+  },
+  "C:\\Projects\\ared.dev\\app\\api\\content\\route.ts": {
+    "mtime": 1779460082.0027082,
+    "ast_hash": "43034c1b851bd5384eefaf0088fe82cd",
+    "semantic_hash": "43034c1b851bd5384eefaf0088fe82cd"
+  },
+  "C:\\Projects\\ared.dev\\app\\api\\storage\\route.ts": {
+    "mtime": 1780141585.707838,
+    "ast_hash": "076da7d08ed98e35d06a106fd030f88b",
+    "semantic_hash": "076da7d08ed98e35d06a106fd030f88b"
+  },
+  "C:\\Projects\\ared.dev\\app\\components\\ContactForm.tsx": {
+    "mtime": 1780202362.607202,
+    "ast_hash": "a049d850a268b80de1280305e5b3f3ce",
+    "semantic_hash": "a049d850a268b80de1280305e5b3f3ce"
+  },
+  "C:\\Projects\\ared.dev\\app\\components\\HireMeButton.tsx": {
+    "mtime": 1780142496.3935218,
+    "ast_hash": "7851e85e7a0110998c9eb6b20760e011",
+    "semantic_hash": "7851e85e7a0110998c9eb6b20760e011"
+  },
+  "C:\\Projects\\ared.dev\\app\\components\\MarkdownContent.tsx": {
+    "mtime": 1780141965.786402,
+    "ast_hash": "50e4d9128a0691c0b70110d1df2d4199",
+    "semantic_hash": "50e4d9128a0691c0b70110d1df2d4199"
+  },
+  "C:\\Projects\\ared.dev\\app\\components\\ReviewGrid.tsx": {
+    "mtime": 1780202362.6092033,
+    "ast_hash": "5477e0cc7e38773f64e4b4b660d03c12",
+    "semantic_hash": "5477e0cc7e38773f64e4b4b660d03c12"
+  },
+  "C:\\Projects\\ared.dev\\app\\components\\ReviewScroll.tsx": {
+    "mtime": 1780202362.611218,
+    "ast_hash": "f0c33e7fbab4ad7e9938893390f591b7",
+    "semantic_hash": "f0c33e7fbab4ad7e9938893390f591b7"
+  },
+  "C:\\Projects\\ared.dev\\app\\[slug]\\page.tsx": {
+    "mtime": 1780121520.8087842,
+    "ast_hash": "0b541d20068fa9cfeb137b8e7664618f",
+    "semantic_hash": "0b541d20068fa9cfeb137b8e7664618f"
+  },
+  "C:\\Projects\\ared.dev\\lib\\content.ts": {
+    "mtime": 1780202362.616732,
+    "ast_hash": "d7f5fb928757cf9252543d74a61206a8",
+    "semantic_hash": "d7f5fb928757cf9252543d74a61206a8"
+  },
+  "C:\\Projects\\ared.dev\\lib\\data.ts": {
+    "mtime": 1779462411.1500485,
+    "ast_hash": "6b946387efb8760c68b60f07010725c4",
+    "semantic_hash": "6b946387efb8760c68b60f07010725c4"
+  },
+  "C:\\Projects\\ared.dev\\lib\\supabase.ts": {
+    "mtime": 1779432526.5119205,
+    "ast_hash": "e5eaac2f8c2866f5bb768aba01628c0a",
+    "semantic_hash": "e5eaac2f8c2866f5bb768aba01628c0a"
+  },
+  "C:\\Projects\\ared.dev\\scripts\\compress-images.mjs": {
+    "mtime": 1778753479.0589921,
+    "ast_hash": "92c38406c9d4935d93de46f0df094074",
+    "semantic_hash": "92c38406c9d4935d93de46f0df094074"
+  },
+  "C:\\Projects\\ared.dev\\supabase\\seed.sql": {
+    "mtime": 1780122913.861821,
+    "ast_hash": "6f4bb3c52989eed61ca83e7c13e23238",
+    "semantic_hash": "6f4bb3c52989eed61ca83e7c13e23238"
+  },
+  "C:\\Projects\\ared.dev\\supabase\\migrations\\00001_content.sql": {
+    "mtime": 1779430499.5283017,
+    "ast_hash": "52ef1c9db605780e7dd70a55d12a85b8",
+    "semantic_hash": "52ef1c9db605780e7dd70a55d12a85b8"
+  },
+  "C:\\Projects\\ared.dev\\supabase\\migrations\\00002_rls.sql": {
+    "mtime": 1779431767.5931208,
+    "ast_hash": "b7b26275efd4945b4485235a1e674e60",
+    "semantic_hash": "b7b26275efd4945b4485235a1e674e60"
+  },
+  "C:\\Projects\\ared.dev\\supabase\\migrations\\00003_admin_features.sql": {
+    "mtime": 1779462065.988168,
+    "ast_hash": "b4d1cea30cdc7bcd658404d7334af33c",
+    "semantic_hash": "b4d1cea30cdc7bcd658404d7334af33c"
+  },
+  "C:\\Projects\\ared.dev\\supabase\\migrations\\00004_storage.sql": {
+    "mtime": 1780141273.3687074,
+    "ast_hash": "abb12c7e3d1d593a4a5603535a9f4fe8",
+    "semantic_hash": "abb12c7e3d1d593a4a5603535a9f4fe8"
+  },
+  "C:\\Projects\\ared.dev\\AGENTS.md": {
+    "mtime": 1774773583.4713254,
+    "ast_hash": "9e09241799026ac05be315a2f0b50055",
+    "semantic_hash": "9e09241799026ac05be315a2f0b50055"
+  },
+  "C:\\Projects\\ared.dev\\CLAUDE.md": {
+    "mtime": 1774773583.4713254,
+    "ast_hash": "5c27369b226fcf2be8a6cfe52224e767",
+    "semantic_hash": "5c27369b226fcf2be8a6cfe52224e767"
+  },
+  "C:\\Projects\\ared.dev\\README.md": {
+    "mtime": 1774239302.707837,
+    "ast_hash": "f15aaa42d5d299d091b1171097ea56ad",
+    "semantic_hash": "f15aaa42d5d299d091b1171097ea56ad"
+  },
+  "C:\\Projects\\ared.dev\\public\\google5c8c2726fea42634.html": {
+    "mtime": 1780143880.5432148,
+    "ast_hash": "8517677d9376f8187ae6d008afa966f2",
+    "semantic_hash": "8517677d9376f8187ae6d008afa966f2"
+  },
+  "C:\\Projects\\ared.dev\\public\\llms.txt": {
+    "mtime": 1779432915.324569,
+    "ast_hash": "de0f37f9c7802c1fbef68a6dac441e46",
+    "semantic_hash": "de0f37f9c7802c1fbef68a6dac441e46"
+  }
+}

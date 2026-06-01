@@ -1,0 +1,37 @@
+# Ajin Varghese Chandy | Full Stack Product Builder
+
+> Ajin Varghese Chandy is a Full Stack Product Builder who designs, builds, and ships scalable web products. He focuses on automation, real-time systems, AI integrations, and developer tooling.
+
+Languages: JavaScript (TypeScript), Python, HTML, CSS — Frontend: React.js, Next.js, Tailwind CSS — Backend: Node.js, Express.js — Databases: MongoDB, PostgreSQL.
+
+## Portfolio
+
+- [Homepage](https://ared.dev): Single-page portfolio with hero, skills, technical experience, projects, reviews, and contact form.
+- [Admin Panel](https://ared.dev/admin): Password-gated dashboard for editing all site content live (skills, hero, experience, projects, social links, footer, reviews, contact email).
+
+## Social & Contact
+
+- [GitHub](https://github.com/aajinn): Open-source projects and tools.
+- [LinkedIn](https://www.linkedin.com/in/ajin-varghese-chandy-1654a4276): Professional profile and experience.
+- [X / Twitter](https://x.com/areddev): Updates and announcements.
+- Email: careerajin@gmail.com
+
+## Projects & Products
+
+- [Real-Time Internet Speed Monitor](https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl): Chrome Extension — 1,000+ active installs for real-time network speed tracking.
+- [MongooseNet](https://www.nuget.org/packages/MongooseNet/): NuGet package — A C# library for schema-flexible data handling in MongoDB.
+- [TaskFlow](https://ared.dev): Full-stack project management app with WebSocket collaboration, JWT auth, and role-based access.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router, RSC, `"use cache"` components)
+- **Styling**: Tailwind CSS, PostCSS
+- **Database**: Supabase (PostgreSQL) with Row-Level Security
+- **Email**: Nodemailer via SMTP (contact form delivery)
+- **Hosting**: Self-hosted Next.js (Node.js server)
+- **Caching**: Next.js `"use cache"` with `cacheLife` and `cacheTag`/`revalidateTag`
+
+## Optional
+
+- [AGENTS.md](https://ared.dev/AGENTS.md): AI agent instructions for project conventions.
+- [README.md](https://ared.dev/README.md): Project overview and setup guide.
