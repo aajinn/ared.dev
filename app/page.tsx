@@ -1,4 +1,4 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { ReviewGrid } from "./components/ReviewGrid";
 import { ReviewScroll } from "./components/ReviewScroll";
 import { HireMeButton } from "./components/HireMeButton";
@@ -8,7 +8,8 @@ import { getAllContent } from "@/lib/data";
 
 export default async function Home() {
   "use cache";
-  cacheLife("max");
+  cacheLife("hours");
+  cacheTag("content");
 
   const content = await getAllContent();
   const { sections } = content.layout;
