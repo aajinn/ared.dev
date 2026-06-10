@@ -23,6 +23,32 @@
   animation: slide-left 0.8s ease-out both;
 }
 
+/* ── Wave emoji animation ── */
+@keyframes wave {
+  0%   { transform: rotate(0deg); }
+  15%  { transform: rotate(14deg); }
+  30%  { transform: rotate(-8deg); }
+  45%  { transform: rotate(14deg); }
+  60%  { transform: rotate(-4deg); }
+  75%  { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: wave 2s ease-in-out 0.5s both;
+}
+
+/* ── Hero name gradient ── */
+.hero-name-gradient {
+  background: linear-gradient(90deg, #a855f7 0%, #ec4899 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+}
+
 .hero-name {
   font-family: var(--font-inter), sans-serif;
   font-weight: 800;

@@ -1,9 +1,8 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { ReviewGrid } from "./components/ReviewGrid";
-import { ReviewScroll } from "./components/ReviewScroll";
-import { HireMeButton } from "./components/HireMeButton";
 import { ContactForm } from "./components/ContactForm";
 import { MarkdownContent } from "./components/MarkdownContent";
+import { Navbar } from "./components/Navbar";
 import { getAllContent } from "@/lib/data";
 
 export default async function Home() {
@@ -14,68 +13,84 @@ export default async function Home() {
   const content = await getAllContent();
   const { sections } = content.layout;
 
+  // Derive first name for gradient highlight
+  const firstName = (content.hero.name || "Ajin").split(" ")[0];
+
   const sectionComponents: Record<string, () => React.ReactNode> = {
     hero: () => (
-      <section className="flex min-h-[100svh] flex-col items-center justify-center px-5 text-center lg:flex-row lg:items-center lg:justify-center lg:gap-16 lg:px-16 lg:text-left xl:px-24">
-        <div className="flex flex-col items-center text-center lg:items-start lg:flex-1 lg:text-left">
-          <p className="mb-4 text-[10px] uppercase tracking-[0.25em] text-[var(--color-text-muted)] sm:text-xs">
-            {content.hero.subtitle}
-          </p>
-          <h1 className="animate-slide-left hero-name text-[clamp(2.4rem,10vw,5.5rem)] uppercase tracking-[0.08em] leading-[0.95] text-[var(--color-text)]">
-            {(content.hero.name || "Ajin Varghese Chandy").split(" ").map((part) => (
-              <span key={part} className="hero-name-line">{part}</span>
-            ))}
+      <>
+        {/* ── Navbar ── */}
+        <Navbar
+          name={content.hero.name}
+          github={content.social.github}
+          linkedin={content.social.linkedin}
+          x={content.social.x}
+          hireMeLabel={content.hero.hireButton?.label || "Hire Me"}
+          hireMeEmail={content.email.to}
+          hireMeSubject={content.email.subject}
+          hireMeBody={content.email.body}
+          showHireMe={content.hero.hireButton?.visible !== false}
+        />
+
+        {/* ── Hero ── */}
+        <section className="flex min-h-[100svh] flex-col items-center justify-center px-5 pt-20 text-center">
+          <h1 className="hero-greeting text-[clamp(2.8rem,9vw,5.5rem)] font-extrabold leading-[1.1] tracking-tight">
+            <span style={{ color: "var(--color-text)" }}>Hi </span>
+            <span role="img" aria-label="wave" className="inline-block animate-wave">👋</span>
+            <span style={{ color: "var(--color-text)" }}>, I&apos;m </span>
+            <span className="hero-name-gradient">{firstName}</span>
+            <span style={{ color: "var(--color-text)" }}>.</span>
           </h1>
-          <p className="mt-5 max-w-sm px-2 text-sm text-[var(--color-text-secondary)] leading-relaxed lg:px-0">
-            {content.hero.description}
+
+          <p className="mt-6 max-w-xl text-base leading-relaxed sm:text-lg"
+            style={{ color: "var(--color-text-secondary)" }}>
+            {content.hero.description}{" "}
+            {content.social.github && (
+              <>
+                Explore{" "}
+                <a href={content.social.github} target="_blank" rel="noreferrer"
+                  className="underline underline-offset-2 transition hover:opacity-80"
+                  style={{ color: "var(--color-accent-hover)" }}>
+                  my projects
+                </a>{" "}
+                and{" "}
+              </>
+            )}
+            <a
+              href={`https://mail.google.com/mail/?view=cm&to=${content.email.to}&su=${content.email.subject}&body=${content.email.body}`}
+              target="_blank"
+              rel="noreferrer"
+              className="underline underline-offset-2 transition hover:opacity-80"
+              style={{ color: "var(--color-accent-hover)" }}>
+              get in touch
+            </a>{" "}
+            while you are here.
           </p>
-          <div className="mt-3 flex flex-wrap justify-center gap-2 lg:justify-start">
+
+          <div className="mt-6 flex flex-wrap justify-center gap-2">
             {content.hero.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border border-[var(--color-border)] px-3 py-1 text-xs text-[var(--color-text-secondary)] whitespace-nowrap"
+                className="rounded-full border px-3 py-1 text-xs whitespace-nowrap"
+                style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
               >
                 {tag}
               </span>
             ))}
           </div>
-          {content.hero.hireButton?.visible !== false && (
-            <HireMeButton
-              email={content.email.to}
-              label={content.hero.hireButton?.label || "Hire Me"}
-            />
-          )}
-          <div className="mt-4 flex w-full max-w-xs flex-col gap-3 sm:max-w-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4 lg:justify-start">
-            <a href={content.social.github} target="_blank" rel="noreferrer"
-              className="rounded border border-[var(--color-border)] py-3 text-center text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:px-5 sm:py-2">
-              GitHub
-            </a>
-            <a href={content.social.linkedin} target="_blank" rel="noreferrer"
-              className="rounded border border-[var(--color-border)] py-3 text-center text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:px-5 sm:py-2">
-              LinkedIn
-            </a>
-            <a href={content.social.x} target="_blank" rel="noreferrer"
-              className="rounded border border-[var(--color-border)] py-3 text-center text-xs uppercase tracking-[0.18em] text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent)] hover:text-[var(--color-text)] sm:px-5 sm:py-2">
-              X (Twitter)
-            </a>
-          </div>
-          <div className="mt-12 flex flex-col items-center gap-1 text-[var(--color-border)] lg:hidden">
+
+          <div className="mt-12 flex flex-col items-center gap-1" style={{ color: "var(--color-border)" }}>
             <span className="text-[10px] tracking-widest uppercase">Scroll</span>
             <svg width="16" height="24" viewBox="0 0 16 24" fill="none" aria-hidden="true">
               <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" strokeWidth="1.5" />
               <circle cx="8" cy="7" r="2" fill="currentColor" className="animate-bounce" />
             </svg>
           </div>
-        </div>
-        {content.reviews.length > 0 && (
-          <div className="hidden lg:block lg:w-80 xl:w-96 lg:shrink-0">
-            <ReviewScroll reviews={content.reviews} />
-          </div>
-        )}
-      </section>
+        </section>
+      </>
     ),
     reviews: () => (
-      <section className="px-5 py-16 bg-[var(--color-surface)] lg:hidden sm:px-6 sm:py-24 overflow-hidden">
+      <section className="px-5 py-16 bg-[var(--color-surface)] sm:px-6 sm:py-24 overflow-hidden">
         <div className="mx-auto w-full max-w-3xl">
           <div className="mb-8 flex items-center gap-4 sm:mb-10">
             <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-text-muted)] sm:text-xs">02</span>
