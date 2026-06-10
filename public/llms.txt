@@ -1,37 +1,66 @@
-# Ajin Varghese Chandy | Full Stack Product Builder
+llm.txt
 
-> Ajin Varghese Chandy is a Full Stack Product Builder who designs, builds, and ships scalable web products. He focuses on automation, real-time systems, AI integrations, and developer tooling.
+Name: Ajin Varghese Chandy
 
-Languages: JavaScript (TypeScript), Python, HTML, CSS — Frontend: React.js, Next.js, Tailwind CSS — Backend: Node.js, Express.js — Databases: MongoDB, PostgreSQL.
+Summary
 
-## Portfolio
+Indie developer focused on building AI-powered products, developer
+tools, and educational platforms. Interested in becoming a one-person
+product creator capable of building, launching, monetizing, and branding
+software independently.
 
-- [Homepage](https://ared.dev): Single-page portfolio with hero, skills, technical experience, projects, reviews, and contact form.
-- [Admin Panel](https://ared.dev/admin): Password-gated dashboard for editing all site content live (skills, hero, experience, projects, social links, footer, reviews, contact email).
+Technical Experience
 
-## Social & Contact
+-   MERN Stack Development (MongoDB, Express.js, React, Node.js)
+-   Next.js 15
+-   TypeScript and JavaScript
+-   Tailwind CSS
+-   HTML and CSS
+-   Python Development
+-   FastAPI Backend Development
+-   MVC Architecture
+-   Chrome Extension Development
+-   FFmpeg and video processing workflows
+-   AssemblyAI integrations
+-   OCR-based applications
+-   Git and modern web development workflows
 
-- [GitHub](https://github.com/aajinn): Open-source projects and tools.
-- [LinkedIn](https://www.linkedin.com/in/ajin-varghese-chandy-1654a4276): Professional profile and experience.
-- [X / Twitter](https://x.com/areddev): Updates and announcements.
-- Email: careerajin@gmail.com
+Areas of Interest
 
-## Projects & Products
+-   AI-assisted software development
+-   Vibe coding workflows
+-   Product engineering
+-   Developer productivity tools
+-   Educational technology
+-   Video automation
+-   Speech and audio processing
+-   Compiler and interpreter design
+-   Project management systems
 
-- [Real-Time Internet Speed Monitor](https://chromewebstore.google.com/detail/real-time-internet-speed/baffnjfijbgpjchgdmbnpkloeccnhenl): Chrome Extension — 1,000+ active installs for real-time network speed tracking.
-- [MongooseNet](https://www.nuget.org/packages/MongooseNet/): NuGet package — A C# library for schema-flexible data handling in MongoDB.
-- [TaskFlow](https://ared.dev): Full-stack project management app with WebSocket collaboration, JWT auth, and role-based access.
+Notable Projects
 
-## Tech Stack
+-   AI-powered project management tools
+-   Self-editing AI video editor
+-   Real-time speech interaction applications
+-   Speech rhythm coaching tools
+-   Educational programming platforms
+-   Video clipping and editing applications
+-   Chrome extensions for knowledge retrieval
+-   Typing games powered by OCR
+-   Student-focused collaboration platforms
+-   Rental management systems
 
-- **Framework**: Next.js 16 (App Router, RSC, `"use cache"` components)
-- **Styling**: Tailwind CSS, PostCSS
-- **Database**: Supabase (PostgreSQL) with Row-Level Security
-- **Email**: Nodemailer via SMTP (contact form delivery)
-- **Hosting**: Self-hosted Next.js (Node.js server)
-- **Caching**: Next.js `"use cache"` with `cacheLife` and `cacheTag`/`revalidateTag`
+Content Creation Interests
 
-## Optional
+-   Long-form educational videos
+-   Motivational storytelling content
+-   Programming education
+-   Technical explainers
 
-- [AGENTS.md](https://ared.dev/AGENTS.md): AI agent instructions for project conventions.
-- [README.md](https://ared.dev/README.md): Project overview and setup guide.
+Career Direction
+
+-   Focused on the MERN ecosystem
+-   Interested in startup creation and indie hacking
+-   Building products that solve meaningful problems
+-   Exploring the future of software development and AI-enhanced
+    engineering
