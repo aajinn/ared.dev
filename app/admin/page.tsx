@@ -585,6 +585,8 @@ function ExperienceEditor({
   experience: Experience;
   onUpdate: (exp: Experience) => void;
 }) {
+  const [pickerIndex, setPickerIndex] = useState<number | null>(null);
+
   function updateItem(index: number, field: string, value: string) {
     const items = experience.items.map((item, i) => (i === index ? { ...item, [field]: value } : item));
     onUpdate({ ...experience, items });
@@ -611,6 +613,43 @@ function ExperienceEditor({
                 </div>
               </div>
               <textarea className="w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0] resize-y" rows={2} value={item.detail} onChange={(e) => updateItem(i, "detail", e.target.value)} placeholder="Detail" />
+              <input className="mt-2 w-full rounded border border-[#2a2a3a] bg-[#1a1a2e] px-2 py-1 text-xs text-[#e8e8f0] outline-none focus:border-[#6060a0]" value={(item as any).cardUrl || ""} onChange={(e) => updateItem(i, "cardUrl", e.target.value)} placeholder="Card URL — opens when card is clicked (optional)" />
+
+              {/* Image picker */}
+              <div className="mt-2">
+                <p className="mb-1 text-[10px] uppercase tracking-wider text-[#555570]">Card Image</p>
+                {(item as any).image ? (
+                  <div className="flex items-center gap-2">
+                    <div className="h-14 w-24 shrink-0 overflow-hidden rounded border border-[#2a2a3a]">
+                      <img src={(item as any).image} alt="" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setPickerIndex(i)}
+                        className="rounded border border-[#2a2a3a] px-2 py-1 text-[10px] text-[#7070a0] hover:border-[#6060a0] hover:text-[#e8e8f0] transition"
+                      >
+                        Change
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => updateItem(i, "image", "")}
+                        className="rounded border border-red-900 px-2 py-1 text-[10px] text-red-400 hover:border-red-500 hover:text-red-300 transition"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setPickerIndex(i)}
+                    className="flex items-center gap-2 rounded border border-dashed border-[#2a2a3a] px-3 py-2 text-xs text-[#555570] transition hover:border-[#6060a0] hover:text-[#7070a0]"
+                  >
+                    <span>＋</span> Pick image
+                  </button>
+                )}
+              </div>
             </div>
           ))}
           <button onClick={() => onUpdate({ ...experience, items: [...experience.items, { label: "", detail: "" }] })} className="self-start text-xs text-[#7070a0] hover:text-[#a0a0c0]">
@@ -618,6 +657,13 @@ function ExperienceEditor({
           </button>
         </div>
       </div>
+
+      {pickerIndex !== null && (
+        <ImagePickerModal
+          onSelect={(url) => { updateItem(pickerIndex, "image", url); setPickerIndex(null); }}
+          onClose={() => setPickerIndex(null)}
+        />
+      )}
     </div>
   );
 }
