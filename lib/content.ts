@@ -8,6 +8,8 @@ export type ExperienceItem = {
   url?: string;
   github?: string;
   detail: string;
+  image?: string;
+  cardUrl?: string;
 };
 
 export type Experience = {

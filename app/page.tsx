@@ -67,11 +67,11 @@ export default async function Home() {
             while you are here.
           </p>
 
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <div className="mt-6 flex flex-wrap justify-center gap-2 max-w-xl mx-auto">
             {content.hero.tags.map((tag) => (
               <span
                 key={tag}
-                className="rounded-full border px-3 py-1 text-xs whitespace-nowrap"
+                className="rounded-full border px-3 py-1 text-xs"
                 style={{ borderColor: "var(--color-border)", color: "var(--color-text-secondary)" }}
               >
                 {tag}
@@ -136,24 +136,45 @@ export default async function Home() {
             <h2 className="text-lg font-semibold tracking-wide text-[var(--color-text)] sm:text-xl">Technical Experience</h2>
             <div className="h-px flex-1 bg-[var(--color-border)]" />
           </div>
-          <div className="flex flex-col gap-4 sm:gap-6">
-            <div className="min-w-0 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-4 sm:p-6">
-              <div className="mb-3 flex flex-wrap items-start gap-2 sm:mb-4 sm:items-center sm:gap-3">
-                <h3 className="text-sm font-semibold leading-snug text-[var(--color-text)] sm:text-base">{content.experience.role}</h3>
-                <span className="rounded-full border border-[var(--color-border)] px-3 py-0.5 text-[10px] text-[var(--color-text-muted)] sm:text-xs">
-                  {content.experience.period}
-                </span>
+        
+          {/* One card per item */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+            {content.experience.items.map((item) => (
+              <div key={item.label}
+                className="group relative flex flex-col rounded-xl border border-[var(--color-border)] bg-[var(--color-bg)] p-5 transition-colors duration-200 hover:border-[var(--color-accent)]">
+                {item.image && (
+                  <div className="mb-4 overflow-hidden rounded-lg border border-[var(--color-border)]">
+                    <img src={item.image} alt={item.label} className="h-36 w-full object-cover" loading="lazy" />
+                  </div>
+                )}
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <h4 className="text-sm font-semibold leading-snug text-[var(--color-text)]">{item.label}</h4>
+                  <div className="relative z-10 flex shrink-0 gap-2">
+                    {item.url && (
+                      <a href={item.url} target="_blank" rel="noreferrer" title="View"
+                        className="rounded-full border border-red-900 px-2.5 py-0.5 text-[10px] text-red-400 transition-colors hover:border-red-500 hover:text-red-300">
+                        ↗ Live
+                      </a>
+                    )}
+                    {item.github && (
+                      <a href={item.github} target="_blank" rel="noreferrer" title="GitHub"
+                        className="rounded-full border border-[var(--color-border)] px-2.5 py-0.5 text-[10px] text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-text)]">
+                        GitHub
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <p className="text-xs leading-relaxed text-[var(--color-text-secondary)]">{item.detail}</p>
+                {item.cardUrl && (
+                  <>
+                    <p className="mt-3 text-[10px] text-[var(--color-text-muted)]">Click to open →</p>
+                    {/* Stretch link covers the whole card, pills sit above via z-10 */}
+                    <a href={item.cardUrl} target="_blank" rel="noreferrer" aria-label={`Open ${item.label}`}
+                      className="absolute inset-0 rounded-xl" />
+                  </>
+                )}
               </div>
-              <p className="mb-3 text-xs text-[var(--color-text-secondary)] leading-relaxed sm:text-sm">{content.experience.description}</p>
-              <ul className="flex flex-col gap-2">
-                {content.experience.items.map((item) => (
-                  <li key={item.label} className="flex gap-3 text-xs text-[var(--color-text-secondary)] leading-relaxed sm:text-sm">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-text-muted)]" />
-                    <span>{item.url ? (<a href={item.url} target="_blank" rel="noreferrer"><strong className="text-[var(--color-text)] underline underline-offset-2 hover:text-[var(--color-text)]">{item.label}</strong></a>) : (<strong className="text-[var(--color-text)]">{item.label}</strong>)} {item.github && <a href={item.github} target="_blank" rel="noreferrer" className="text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)] transition-colors" title="GitHub">&#8599;</a>} — {item.detail}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            ))}
           </div>
         </div>
       </section>
