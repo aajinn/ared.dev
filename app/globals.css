@@ -42,10 +42,11 @@
 
 /* ── Hero name gradient ── */
 .hero-name-gradient {
-  background: linear-gradient(90deg, #a855f7 0%, #ec4899 50%, #f97316 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: linear-gradient(135deg, #00d2ff 0%, #7b2ff7 50%, #ff6ec7 100%);
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
   font-weight: 800;
 }
 
